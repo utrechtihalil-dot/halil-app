@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b10">
+<title>Halil İbrahim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&family=Amiri+Quran&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --bg:        #080b10;
+  --surface:   #0f1318;
+  --card:      #131820;
+  --card2:     #181f28;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.04);
+  --gold:      #d4a84b;
+  --gold2:     #e8c96a;
+  --gold-dim:  rgba(212,168,75,0.12);
+  --gold-glow: rgba(212,168,75,0.06);
+  --red:       #e05252;
+  --blue:      #4d9de0;
+  --green:     #3aaa68;
+  --purple:    #9b72cf;
+  --text:      #eaf0f8;
+  --text2:     #8a97a8;
+  --text3:     #3d4a58;
+  --islami:    #d4a84b;
+  --youtube:   #e05252;
+  --nl:        #4d9de0;
+  --mahkeme:   #9b72cf;
+  --r: 16px;
+  --r2: 10px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body{max-width:480px;margin:0 auto;position:relative}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:1;
+}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(8,11,16,0.88);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.header-bismillah{
+  font-family:'Amiri Quran',serif;
+  font-size:17px;
+  color:var(--gold);
+  letter-spacing:1px;
+}
+.header-right{text-align:right}
+.header-dayname{
+  font-size:10px;font-weight:600;
+  color:var(--gold);text-transform:uppercase;letter-spacing:2px;
+}
+.header-date{font-size:12px;color:var(--text2);font-weight:400;margin-top:1px}
+
+.voice-fab{
+  position:fixed;
+  bottom:90px;right:18px;
+  z-index:150;
+  width:52px;height:52px;
+  border-radius:50%;
+  background:var(--gold);
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  box-shadow:0 4px 24px rgba(212,168,75,0.35);
+  transition:all 0.2s;
+  animation:fabPulse 3s ease-in-out infinite;
+}
+.voice-fab:active{transform:scale(0.92)}
+.voice-fab.speaking{
+  animation:speakPulse 0.8s ease-in-out infinite;
+  background:var(--gold2);
+}
+@keyframes fabPulse{
+  0%,100%{box-shadow:0 4px 24px rgba(212,168,75,0.35)}
+  50%{box-shadow:0 4px 32px rgba(212,168,75,0.6)}
+}
+@keyframes speakPulse{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(212,168,75,0.5)}
+  50%{transform:scale(1.08);box-shadow:0 0 0 12px rgba(212,168,75,0)}
+}
+
+.assistant-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s;
+}
+.assistant-overlay.open{opacity:1;pointer-events:all}
+
+.assistant-panel{
+  position:fixed;
+  bottom:0;left:50%;transform:translateX(-50%) translateY(100%);
+  width:100%;max-width:480px;
+  z-index:301;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-radius:24px 24px 0 0;
+  padding:0 0 env(safe-area-inset-bottom,16px);
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.assistant-panel.open{transform:translateX(-50%) translateY(0)}
+
+.panel-handle{
+  width:36px;height:4px;
+  background:var(--border);
+  border-radius:2px;
+  margin:14px auto 0;
+}
+
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;
+  border-bottom:1px solid var(--border2);
+}
+.panel-title{font-size:15px;font-weight:600;color:var(--text)}
+.panel-close{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text2);font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+
+.assistant-body{padding:16px 20px 20px;max-height:70vh;overflow-y:auto}
+
+.waveform{
+  display:flex;align-items:center;justify-content:center;
+  gap:3px;height:40px;margin-bottom:16px;
+}
+.wave-bar{
+  width:3px;border-radius:2px;
+  background:var(--gold);opacity:0.4;
+  animation:none;
+  height:6px;transition:height 0.2s;
+}
+.waveform.active .wave-bar{
+  opacity:0.8;
+  animation:waveAnim 0.8s ease-in-out infinite;
+}
+.wave-bar:nth-child(1){animation-delay:0s}
+.wave-bar:nth-child(2){animation-delay:0.1s}
+.wave-bar:nth-child(3){animation-delay:0.2s}
+.wave-bar:nth-child(4){animation-delay:0.3s}
+.wave-bar:nth-child(5){animation-delay:0.15s}
+.wave-bar:nth-child(6){animation-delay:0.05s}
+.wave-bar:nth-child(7){animation-delay:0.25s}
+@keyframes waveAnim{
+  0%,100%{height:6px;opacity:0.4}
+  50%{height:28px;opacity:1}
+}
+
+.assistant-bubble{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  border-top-left-radius:4px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  font-size:14px;line-height:1.7;
+  color:var(--text2);
+}
+.assistant-bubble .highlight{color:var(--gold);font-weight:600}
+.assistant-bubble .arabic{
+  font-family:'Amiri Quran',serif;
+  font-size:20px;
+  color:var(--gold2);
+  display:block;
+  text-align:right;
+  margin:8px 0 4px;
+  line-height:1.8;
+}
+
+.assistant-actions{display:flex;gap:8px;flex-wrap:wrap}
+.assist-btn{
+  padding:8px 14px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--card2);
+  color:var(--text2);
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:500;
+  cursor:pointer;transition:all 0.2s;
+}
+.assist-btn:active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.assist-btn.primary{
+  background:var(--gold);
+  border-color:var(--gold);
+  color:#080b10;
+  font-weight:700;
+}
+
+.page{display:none;padding:14px 16px 110px;position:relative;z-index:1}
+.page.active{display:block}
+
+.bottom-nav{
+  position:fixed;bottom:0;
+  left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;
+  background:rgba(15,19,24,0.96);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;z-index:100;
+  padding:4px 4px env(safe-area-inset-bottom,8px);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:7px 0;cursor:pointer;
+  transition:all 0.2s;
+  border:none;background:none;color:var(--text3);
+  font-family:'DM Sans',sans-serif;
+}
+.nav-btn.active{color:var(--gold)}
+.nav-icon{font-size:18px;transition:transform 0.25s}
+.nav-btn.active .nav-icon{transform:scale(1.15)}
+.nav-label{font-size:8px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase}
+
+.sec-label{
+  font-size:10px;font-weight:700;
+  color:var(--text3);
+  text-transform:uppercase;letter-spacing:2px;
+  margin:20px 0 10px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-label::after{
+  content:'';flex:1;height:1px;background:var(--border2);
+}
+
+.hero{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:20px;
+  position:relative;overflow:hidden;
+  margin-bottom:10px;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:160px;height:160px;
+  background:radial-gradient(circle,var(--gold-glow) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:700;
+  color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:10px;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  animation:livePulse 1.5s ease-in-out infinite;
+}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(58,170,104,0.4)}50%{opacity:0.7;box-shadow:0 0 0 5px rgba(58,170,104,0)}}
+.hero-name{font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.25}
+.hero-sub{font-size:12px;color:var(--text2);margin-bottom:16px}
+.countdown-row{display:flex;gap:8px;align-items:center}
+.cd-box{
+  text-align:center;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;min-width:56px;
+}
+.cd-num{
+  font-family:'DM Mono',monospace;
+  font-size:24px;font-weight:500;
+  color:var(--gold);line-height:1;
+  letter-spacing:-1px;
+}
+.cd-lbl{font-size:8px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:3px}
+.cd-sep{font-size:18px;color:var(--text3);font-weight:300;padding-bottom:10px}
+
+.prayer-scroll{
+  display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;
+  scrollbar-width:none;
+}
+.prayer-scroll::-webkit-scrollbar{display:none}
+.prayer-pill{
+  flex-shrink:0;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:30px;padding:8px 16px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-width:72px;transition:all 0.3s;
+}
+.prayer-pill.active{background:var(--gold-dim);border-color:rgba(212,168,75,0.4)}
+.prayer-pill.past{opacity:0.3}
+.pp-name{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:0.5px}
+.prayer-pill.active .pp-name{color:var(--gold)}
+.pp-time{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
+.prayer-pill.active .pp-time{color:var(--gold2)}
+
+.court-banner{
+  background:var(--card);
+  border:1px solid rgba(224,82,82,0.2);
+  border-radius:var(--r);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:10px;
+}
+.court-num{
+  font-family:'DM Mono',monospace;
+  font-size:38px;font-weight:500;
+  color:var(--red);line-height:1;
+  letter-spacing:-2px;
+}
+.court-info-lbl{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px}
+.court-info-sub{font-size:11px;color:rgba(224,82,82,0.7);margin-top:2px;font-style:italic}
+
+.task{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 14px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);
+  margin-bottom:7px;cursor:pointer;
+  transition:all 0.25s;
+  animation:slideUp 0.4s ease both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.task:active{background:var(--card2)}
+.task.done{opacity:0.42;border-color:rgba(58,170,104,0.15)}
+.task.missed{opacity:0.28}
+.task.task-now{border-color:rgba(58,170,104,0.3);background:rgba(58,170,104,0.03)}
+
+.task-check{
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid var(--text3);
+  flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;transition:all 0.2s;
+}
+.task.done .task-check{background:var(--green);border-color:var(--green);color:#fff}
+
+.task-em{font-size:18px;flex-shrink:0;margin-top:2px}
+
+.task-body{flex:1;min-width:0}
+.task-row1{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
+.task-time{
+  font-family:'DM Mono',monospace;
+  font-size:11px;color:var(--text3);font-weight:400;
+}
+.badge{
+  font-size:8px;font-weight:800;padding:2px 7px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.badge-now{background:rgba(58,170,104,0.18);color:var(--green)}
+.badge-soon{background:rgba(77,157,224,0.18);color:var(--blue)}
+.task-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task.done .task-name{text-decoration:line-through}
+.task-desc{font-size:11px;color:var(--text2)}
+.cat-tag{
+  font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;
+  flex-shrink:0;align-self:flex-start;margin-top:4px;white-space:nowrap;
+}
+.cat-islami{background:rgba(212,168,75,0.12);color:var(--islami)}
+.cat-youtube{background:rgba(224,82,82,0.12);color:var(--youtube)}
+.cat-hollandaca{background:rgba(77,157,224,0.12);color:var(--nl)}
+.cat-mahkeme{background:rgba(155,114,207,0.12);color:var(--mahkeme)}
+.cat-saglik{background:rgba(58,170,104,0.12);color:var(--green)}
+
+.progress-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;margin-bottom:10px;
+}
+.prog-item{margin-bottom:13px}
+.prog-item:last-child{margin-bottom:0}
+.prog-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.prog-name{font-size:12px;font-weight:600;color:var(--text2)}
+.prog-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.prog-track{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1)}
+
+.health-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.health-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px 14px;
+  text-align:center;cursor:pointer;transition:all 0.2s;
+}
+.health-card:active{transform:scale(0.97)}
+.health-card.done{border-color:rgba(58,170,104,0.3);background:rgba(58,170,104,0.04)}
+.h-icon{font-size:24px;margin-bottom:7px}
+.h-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.h-status{font-size:10px;color:var(--text3)}
+.health-card.done .h-status{color:var(--green)}
+
+.water-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;margin-bottom:10px;
+}
+.water-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.water-title{font-size:13px;font-weight:600;color:var(--text)}
+.water-num{font-family:'DM Mono',monospace;font-size:13px;color:var(--blue)}
+.cups{display:flex;gap:7px;flex-wrap:wrap}
+.cup{
+  width:34px;height:34px;border-radius:8px;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;
+  opacity:0.25;transition:all 0.2s;
+}
+.cup.full{opacity:1;border-color:rgba(77,157,224,0.4);background:rgba(77,157,224,0.08)}
+
+.week-scroll{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.week-scroll::-webkit-scrollbar{display:none}
+.week-day{
+  flex-shrink:0;text-align:center;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:30px;padding:10px 14px;min-width:50px;
+}
+.week-day.today{background:var(--gold-dim);border-color:rgba(212,168,75,0.35)}
+.wd-name{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.week-day.today .wd-name{color:var(--gold)}
+.wd-num{font-size:16px;font-weight:700;color:var(--text)}
+.wd-dot{width:4px;height:4px;background:var(--green);border-radius:50%;margin:4px auto 0;display:none}
+.week-day.today .wd-dot{display:block}
+
+.weekly-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px 14px;margin-bottom:7px;
+}
+.wr-icon{font-size:18px}
+.wr-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.wr-sub{font-size:11px;color:var(--text2)}
+
+.duty-group{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:10px;
+}
+.duty-group-header{
+  padding:11px 16px;border-bottom:1px solid var(--border2);
+  font-size:10px;font-weight:800;color:var(--gold);
+  text-transform:uppercase;letter-spacing:1.5px;
+  display:flex;align-items:center;gap:8px;
+}
+.duty-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-bottom:1px solid var(--border2);
+  cursor:pointer;transition:background 0.2s;
+}
+.duty-row:last-child{border-bottom:none}
+.duty-row:active{background:rgba(255,255,255,0.02)}
+.duty-cb{
+  width:20px;height:20px;border-radius:5px;
+  border:1.5px solid var(--text3);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:all 0.2s;
+}
+.duty-row.done .duty-cb{background:var(--green);border-color:var(--green);color:#fff}
+.duty-n{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.duty-row.done .duty-n{color:var(--text2);text-decoration:line-through}
+.duty-s{font-size:10px;color:var(--text3)}
+
+.baba-section{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:10px;
+}
+.baba-header{
+  padding:14px 16px;
+  background:linear-gradient(135deg,rgba(212,168,75,0.08),transparent);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.baba-title{font-size:15px;font-weight:700;color:var(--text)}
+.baba-title span{font-size:18px;margin-right:8px}
+.baba-add-btn{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--gold);border:none;
+  color:#080b10;font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+}
+.baba-tabs{display:flex;border-bottom:1px solid var(--border2)}
+.baba-tab{
+  flex:1;padding:10px;text-align:center;
+  font-size:11px;font-weight:600;color:var(--text3);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all 0.2s;
+}
+.baba-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.baba-content{padding:14px 16px;min-height:80px}
+.baba-empty{text-align:center;padding:20px;font-size:12px;color:var(--text3);line-height:1.6}
+.baba-entry{padding:12px 0;border-bottom:1px solid var(--border2)}
+.baba-entry:last-child{border-bottom:none}
+.baba-entry-type{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.baba-entry-text{font-size:13px;color:var(--text2);line-height:1.6}
+.baba-entry-date{font-size:10px;color:var(--text3);margin-top:4px}
+.baba-entry-arabic{font-family:'Amiri Quran',serif;font-size:18px;color:var(--gold);text-align:right;line-height:1.8;margin-top:6px}
+
+.modal-overlay{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity 0.25s;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  width:100%;max-width:480px;
+  background:var(--surface);
+  border-radius:20px 20px 0 0;
+  border-top:1px solid var(--border);
+  padding:20px 20px calc(env(safe-area-inset-bottom,16px) + 16px);
+  transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px}
+.modal-type-row{display:flex;gap:8px;margin-bottom:14px}
+.type-btn{
+  flex:1;padding:8px;border-radius:8px;
+  border:1.5px solid var(--border);
+  background:transparent;color:var(--text2);
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;
+  cursor:pointer;transition:all 0.2s;text-align:center;
+}
+.type-btn.sel{background:var(--gold-dim);border-color:rgba(212,168,75,0.5);color:var(--gold)}
+.modal-input{
+  width:100%;background:var(--card);
+  border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  outline:none;resize:none;margin-bottom:10px;
+  transition:border-color 0.2s;
+  min-height:80px;
+}
+.modal-input:focus{border-color:rgba(212,168,75,0.4)}
+.modal-input::placeholder{color:var(--text3)}
+.modal-arabic-input{font-family:'Amiri Quran',serif;font-size:18px;direction:rtl;text-align:right}
+.modal-actions{display:flex;gap:8px}
+.modal-cancel{
+  flex:1;padding:12px;border-radius:10px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;
+}
+.modal-save{
+  flex:2;padding:12px;border-radius:10px;
+  border:none;background:var(--gold);
+  color:#080b10;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+}
+
+.profile-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px 18px;text-align:center;margin-bottom:10px;
+}
+.p-avatar{
+  width:68px;height:68px;border-radius:50%;
+  background:var(--gold-dim);border:1.5px solid rgba(212,168,75,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;margin:0 auto 12px;
+}
+.p-name{font-size:19px;font-weight:700;color:var(--text);margin-bottom:4px}
+.p-loc{font-size:12px;color:var(--text2)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat-cell{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 10px;text-align:center;
+}
+.stat-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--text);line-height:1;margin-bottom:4px}
+.stat-val.red{color:var(--red)}
+.stat-lbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px}
+.goal-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;margin-bottom:7px;
+}
+.goal-icon{font-size:22px;flex-shrink:0}
+.goal-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.goal-sub{font-size:11px;color:var(--text2);margin-bottom:5px}
+.goal-pill{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;display:inline-block}
+
+.add-row{
+  width:100%;padding:13px;
+  border-radius:var(--r);
+  border:1px dashed var(--border);
+  background:transparent;color:var(--text3);
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  cursor:default;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:6px;
+}
+.chip-soon{
+  background:var(--gold-dim);color:var(--gold);
+  font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+
+.toast-wrap{
+  position:fixed;top:10px;
+  left:50%;transform:translateX(-50%);
+  width:calc(100% - 28px);max-width:440px;
+  z-index:500;
+  display:flex;flex-direction:column;gap:6px;
+  pointer-events:none;
+}
+.toast{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  pointer-events:all;
+  animation:toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+.toast.out{animation:toastOut 0.25s ease forwards}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px)}}
+.toast-icon{font-size:18px;flex-shrink:0}
+.toast-body{flex:1}
+.toast-ttl{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:1px}
+.toast-msg{font-size:12px;color:var(--text)}
+.toast-x{font-size:14px;color:var(--text3);cursor:pointer;padding:2px 6px}
+
+/* ─────────────────────────────────────────
+   KURAN PAGE
+───────────────────────────────────────── */
+.quran-bsmllh{
+  font-family:'Amiri Quran',serif;
+  font-size:26px;color:var(--gold);
+  text-align:center;
+  padding:16px 0 6px;
+  line-height:1.6;
+  letter-spacing:1px;
+}
+.k-btn-minus{
+  width:42px;padding:10px 0;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:var(--card2);
+  color:var(--text2);font-size:20px;font-weight:300;
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+  flex-shrink:0;
+}
+.k-btn-plus{
+  flex:1;padding:10px;
+  border-radius:9px;
+  border:none;background:var(--gold);
+  color:#080b10;font-size:13px;font-weight:700;
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+}
+.k-btn-plus:active,.k-btn-minus:active{transform:scale(0.95)}
+.k-cuz-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:6px;
+}
+.k-cuz-box{
+  aspect-ratio:1;
+  border-radius:9px;
+  border:1.5px solid var(--border);
+  background:transparent;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;
+  gap:2px;
+}
+.k-cuz-box:active{transform:scale(0.9)}
+.k-cuz-box.done{background:var(--gold-dim);border-color:rgba(212,168,75,0.5)}
+.k-cuz-n{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--text3)}
+.k-cuz-box.done .k-cuz-n{color:var(--gold)}
+.k-cuz-ck{font-size:8px;color:var(--gold);line-height:1;height:0;overflow:hidden;transition:height 0.15s}
+.k-cuz-box.done .k-cuz-ck{height:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-bismillah">بِسْمِ اللّٰهِ</div>
+  <div class="header-right">
+    <div class="header-dayname" id="dayName">—</div>
+    <div class="header-date" id="fullDate">—</div>
+  </div>
+</div>
+
+<button class="voice-fab" id="voiceFab" onclick="openAssistant()" title="Sesli Asistan">🎙️</button>
+
+<div class="assistant-overlay" id="assistOverlay" onclick="closeAssistant()"></div>
+<div class="assistant-panel" id="assistPanel">
+  <div class="panel-handle"></div>
+  <div class="panel-header">
+    <span class="panel-title">🕌 Sesli Rehber</span>
+    <div class="panel-close" onclick="closeAssistant()">✕</div>
+  </div>
+  <div class="assistant-body">
+    <div class="waveform" id="waveform">
+      <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+      <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+    <div class="assistant-bubble" id="assistBubble">
+      Merhaba <span class="highlight">Halil İbrahim</span>! Seni görmek ne güzel.
+      Hazır olduğunda butona bas, sana bu anın rehberliğini yapayım.
+    </div>
+    <div class="assistant-actions" id="assistActions">
+      <button class="assist-btn primary" onclick="speakNow()">▶ Şimdi Konuş</button>
+      <button class="assist-btn" onclick="speakPrayer()">🕌 Namaz Vakti</button>
+      <button class="assist-btn" onclick="speakZikir()">📿 Zikir Hatırlat</button>
+      <button class="assist-btn" onclick="speakMotivation()">✨ Motivasyon</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="babaModal">
+  <div class="modal">
+    <div class="modal-title">✍️ Babam İçin Ekle</div>
+    <div class="modal-type-row">
+      <button class="type-btn sel" id="typeNote" onclick="selectType('not')">📝 Not / Anı</button>
+      <button class="type-btn" id="typeDua" onclick="selectType('dua')">🤲 Dua</button>
+      <button class="type-btn" id="typeArabic" onclick="selectType('arabic')">العربية</button>
+    </div>
+    <textarea class="modal-input" id="babaInput" placeholder="Buraya yaz…" rows="4"></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">İptal</button>
+      <button class="modal-save" onclick="saveBabaEntry()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- BUGÜN -->
+<div class="page active" id="page-bugun">
+  <div class="sec-label">Sıradaki</div>
+  <div class="hero" id="heroCard">
+    <div class="hero-chip"><div class="live-dot"></div><span id="heroChipText">Canlı</span></div>
+    <div class="hero-name" id="heroName">Yükleniyor…</div>
+    <div class="hero-sub" id="heroSub"></div>
+    <div class="countdown-row" id="heroCountdown">
+      <div class="cd-box"><div class="cd-num" id="cdH">00</div><div class="cd-lbl">Saat</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-box"><div class="cd-num" id="cdM">00</div><div class="cd-lbl">Dak</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-box"><div class="cd-num" id="cdS">00</div><div class="cd-lbl">Sn</div></div>
+    </div>
+  </div>
+  <div class="sec-label">Namaz Vakitleri</div>
+  <div class="prayer-scroll" id="prayerRow"></div>
+  <div class="sec-label">Mahkeme</div>
+  <div class="court-banner">
+    <div>⚖️</div>
+    <div class="court-num" id="courtNum">—</div>
+    <div>
+      <div class="court-info-lbl">Gün Kaldı</div>
+      <div class="court-info-sub">hazırlıkları aksatma</div>
+    </div>
+  </div>
+  <div class="sec-label">Bugünkü Program</div>
+  <div id="taskList"></div>
+  <div class="sec-label">Kategori İlerlemesi</div>
+  <div class="progress-card" id="progSection"></div>
+  <div class="sec-label">Sağlık</div>
+  <div class="health-grid" id="healthGrid"></div>
+  <div class="sec-label">Su Takibi</div>
+  <div class="water-card">
+    <div class="water-top">
+      <div class="water-title">💧 Su Takibi</div>
+      <div class="water-num"><span id="waterN">0</span> / 8</div>
+    </div>
+    <div class="cups" id="cupsRow"></div>
+  </div>
+</div>
+
+<!-- KURAN -->
+<div class="page" id="page-kuran">
+  <div class="quran-bsmllh">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ</div>
+
+  <div class="sec-label" style="margin-top:14px">Günlük Hedef</div>
+  <div class="hero">
+    <div class="hero-chip"><div class="live-dot"></div>3 Sayfa + Meal</div>
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="position:relative;width:76px;height:76px;flex-shrink:0">
+        <svg width="76" height="76" style="transform:rotate(-90deg)">
+          <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="5"/>
+          <circle id="kRing" cx="38" cy="38" r="32" fill="none" stroke="#d4a84b" stroke-width="5"
+            stroke-dasharray="201.1" stroke-dashoffset="201.1" stroke-linecap="round"
+            style="transition:stroke-dashoffset 0.6s ease"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px">
+          <span id="kRingN" style="font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--gold);line-height:1">0</span>
+          <span style="font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px">sayfa</span>
+        </div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px">
+          Bugün <span id="kTodayN">0</span> / 3 sayfa
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Hedef: 3 sayfa + Türkçe meal</div>
+        <div style="display:flex;gap:8px">
+          <button class="k-btn-minus" onclick="kAddPages(-1)">−</button>
+          <button class="k-btn-plus" onclick="kAddPages(1)">+ Sayfa Ekle</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border2)">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">📖 Meal ile okudum</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">Türkçe meali de okudum bugün</div>
+      </div>
+      <div id="kMealToggle" onclick="kToggleMeal()" style="width:46px;height:26px;border-radius:13px;background:var(--text3);cursor:pointer;position:relative;transition:background 0.25s;flex-shrink:0">
+        <div id="kMealThumb" style="width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-label">İstatistikler</div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-val" id="kStatPages" style="color:var(--gold)">0</div>
+      <div class="stat-lbl">Toplam Sayfa</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val" id="kStatHatim">0</div>
+      <div class="stat-lbl">Hatim</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val" id="kStatStreak" style="color:var(--green)">0</div>
+      <div class="stat-lbl">🔥 Seri</div>
+    </div>
+  </div>
+
+  <div class="progress-card" style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-size:12px;font-weight:600;color:var(--text2)">📿 Sonraki Hatim</span>
+      <span id="kHatimInfo" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">%0 · 604 kaldı</span>
+    </div>
+    <div class="prog-track">
+      <div id="kHatimFill" class="prog-fill" style="width:0%;background:var(--gold)"></div>
+    </div>
+  </div>
+
+  <div class="sec-label">Cüz Takibi</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 14px 18px;margin-bottom:10px">
+    <div style="font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:0.3px">Tamamlanan cüze dokun · 30 cüz = 1 hatim</div>
+    <div id="kCuzGrid" class="k-cuz-grid"></div>
+  </div>
+
+  <div class="sec-label">Bugünkü Not</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px">
+    <textarea id="kNoteInput" class="modal-input" style="margin-bottom:10px;min-height:80px;width:100%"
+      placeholder="Hangi sure, hangi ayet… Bugün seni etkileyen bir şey?"></textarea>
+    <button onclick="kSaveNote()" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(212,168,75,0.3);background:var(--gold-dim);color:var(--gold);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer">✓ Notu Kaydet</button>
+  </div>
+
+  <div class="sec-label">Son 7 Gün</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 14px 10px;margin-bottom:10px">
+    <div id="kWeekChart" style="display:flex;gap:5px;height:64px;align-items:flex-end"></div>
+  </div>
+</div>
+
+<!-- HAFTALIK -->
+<div class="page" id="page-haftalik">
+  <div class="sec-label">Bu Hafta</div>
+  <div class="week-scroll" id="weekRow"></div>
+  <div class="sec-label">Sabit Etkinlikler</div>
+  <div class="weekly-row">
+    <span class="wr-icon">🌅</span>
+    <div style="flex:1"><div class="wr-name">Ali Esat Ağabey Sabah Sohbeti</div><div class="wr-sub">Her Gün · 06:30 · Google Meet</div></div>
+    <span class="cat-tag cat-islami">İslami</span>
+  </div>
+  <div class="weekly-row">
+    <span class="wr-icon">🤲</span>
+    <div style="flex:1"><div class="wr-name">Online Dua Buluşması</div><div class="wr-sub">Her Gün · 11:00</div></div>
+    <span class="cat-tag cat-islami">İslami</span>
+  </div>
+  <div class="weekly-row">
+    <span class="wr-icon">👥</span>
+    <div style="flex:1"><div class="wr-name">Grup İstişaresi</div><div class="wr-sub">Haftalık · Gün/Saat eklenecek</div></div>
+    <span class="cat-tag cat-islami">İslami</span>
+  </div>
+  <div class="weekly-row">
+    <span class="wr-icon">📚</span>
+    <div style="flex:1"><div class="wr-name">Talebe Takibi</div><div class="wr-sub">Haftalık · İlgilenilen talebe görüşmeleri</div></div>
+    <span class="cat-tag cat-islami">İslami</span>
+  </div>
+  <div class="weekly-row">
+    <span class="wr-icon">🎥</span>
+    <div style="flex:1"><div class="wr-name">YouTube İçerik Planlaması</div><div class="wr-sub">Haftalık · İçerik takvimi & strateji</div></div>
+    <span class="cat-tag cat-youtube">YouTube</span>
+  </div>
+  <button class="add-row">+ Haftalık etkinlik ekle <span class="chip-soon">Yakında</span></button>
+</div>
+
+<!-- VAZİFELER -->
+<div class="page" id="page-vazifeler">
+  <div class="sec-label">İslami Vazifeler</div>
+  <div class="duty-group">
+    <div class="duty-group-header">🌟 Günlük Yükümlülükler</div>
+    <div class="duty-row" data-duty="ns" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Sabah Namazı</div><div class="duty-s">03:58</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="no" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Öğle Namazı</div><div class="duty-s">13:29</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="ni" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">İkindi Namazı</div><div class="duty-s">17:16</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="na" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Akşam Namazı</div><div class="duty-s">21:06</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="ny" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Yatsı Namazı</div><div class="duty-s">23:01</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="zs" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Sabah Zikri & Vird</div><div class="duty-s">07:00</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="za" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Akşam Zikri & Değerlendirme</div><div class="duty-s">23:30</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="kq" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Kuran Tilâveti</div><div class="duty-s">Günlük sayfa/bölüm</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="db" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Dua Buluşması</div><div class="duty-s">11:00</div></div><span class="cat-tag cat-islami">İslami</span></div>
+    <div class="duty-row" data-duty="ae" onclick="toggleDuty(this)"><div class="duty-cb">✓</div><div style="flex:1"><div class="duty-n">Ali Esat Ağabey Sohbeti</div><div class="duty-s">06:30 · Google Meet</div></div><span class="cat-tag cat-islami">İslami</span></div>
+  </div>
+  <div class="sec-label">Grup Sorumlulukları</div>
+  <div class="duty-group">
+    <div class="duty-group-header">👥 Grubun Vazifeleri</div>
+    <div style="padding:20px 16px;text-align:center;font-size:12px;color:var(--text3);line-height:1.7">
+      Grubun sana verdiği vazifeleri ve sorumlulukları söyle — birlikte buraya ekleyelim.
+    </div>
+  </div>
+  <button class="add-row">+ Vazifeye ekle <span class="chip-soon">Yakında</span></button>
+  <div class="sec-label">Babam</div>
+  <div class="baba-section" id="babamSection">
+    <div class="baba-header">
+      <div class="baba-title"><span>🕊️</span>Babamın Perspektifi</div>
+      <button class="baba-add-btn" onclick="openModal()">+</button>
+    </div>
+    <div class="baba-tabs">
+      <div class="baba-tab active" onclick="switchBabaTab('not',this)">📝 Notlar</div>
+      <div class="baba-tab" onclick="switchBabaTab('dua',this)">🤲 Dualar</div>
+      <div class="baba-tab" onclick="switchBabaTab('arabic',this)">العربية</div>
+    </div>
+    <div class="baba-content" id="babaContent">
+      <div class="baba-empty">Henüz bu bölümde bir şey yok.<br><span style="color:var(--gold)">+</span> butonuna basarak babana dair not, dua veya Arapça ibare ekleyebilirsin.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFİL -->
+<div class="page" id="page-profil">
+  <div class="profile-card">
+    <div class="p-avatar">🕌</div>
+    <div class="p-name">Halil İbrahim Erkan</div>
+    <div class="p-loc">📍 Utrecht, Hollanda · 38 yaşında</div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-cell"><div class="stat-val">78</div><div class="stat-lbl">Kilo</div></div>
+    <div class="stat-cell"><div class="stat-val">1.67</div><div class="stat-lbl">Boy</div></div>
+    <div class="stat-cell"><div class="stat-val red" id="profileDays">—</div><div class="stat-lbl">Gün Kaldı</div></div>
+  </div>
+  <div class="sec-label">Günlük Hedefler</div>
+  <div class="goal-row">
+    <div class="goal-icon">🎥</div>
+    <div style="flex:1"><div class="goal-name">YouTube Çalışması</div><div class="goal-sub">İçerik üretimi & Claude eğitimi</div><span class="goal-pill" style="background:rgba(224,82,82,0.12);color:var(--youtube)">3 saat/gün</span></div>
+  </div>
+  <div class="goal-row">
+    <div class="goal-icon">🇳🇱</div>
+    <div style="flex:1"><div class="goal-name">Hollandaca</div><div class="goal-sub">Dil öğrenimi — hedef Utrecht</div><span class="goal-pill" style="background:rgba(77,157,224,0.12);color:var(--nl)">2 saat/gün</span></div>
+  </div>
+  <div class="goal-row">
+    <div class="goal-icon">🕌</div>
+    <div style="flex:1"><div class="goal-name">İslami Rutinler</div><div class="goal-sub">Namaz + zikir + sohbet + dua</div><span class="goal-pill" style="background:rgba(212,168,75,0.12);color:var(--islami)">~3 saat/gün</span></div>
+  </div>
+  <div class="goal-row">
+    <div class="goal-icon">⚖️</div>
+    <div style="flex:1"><div class="goal-name">Mahkeme Hazırlığı</div><div class="goal-sub">Belgeler, notlar, savunma</div><span class="goal-pill" style="background:rgba(155,114,207,0.12);color:var(--mahkeme)">30 dk/gün</span></div>
+  </div>
+  <div class="goal-row">
+    <div class="goal-icon">📖</div>
+    <div style="flex:1"><div class="goal-name">Kuran Tilâveti</div><div class="goal-sub">Günlük sayfa takibi + meal</div><span class="goal-pill" style="background:rgba(212,168,75,0.12);color:var(--gold)">3 sayfa/gün</span></div>
+  </div>
+  <div style="height:12px"></div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;text-align:center">
+    <div style="font-family:'Amiri Quran',serif;font-size:20px;color:var(--gold);margin-bottom:6px">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ</div>
+    <div style="font-size:10px;color:var(--text3);letter-spacing:1px">Bismillahirrahmanirrahim</div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchPage('bugun',this)">
+    <span class="nav-icon">🏠</span><span class="nav-label">Bugün</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('kuran',this)">
+    <span class="nav-icon">📖</span><span class="nav-label">Kuran</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('haftalik',this)">
+    <span class="nav-icon">📅</span><span class="nav-label">Haftalık</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('vazifeler',this)">
+    <span class="nav-icon">📿</span><span class="nav-label">Vazifeler</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('profil',this)">
+    <span class="nav-icon">👤</span><span class="nav-label">Profil</span>
+  </button>
+</nav>
+
+<script>
+/* ══ DATA ══ */
+const TASKS = [
+  {id:'sabah',    time:'03:58', name:'Sabah Namazı',               desc:'Fecr vakti',                   icon:'🌙', cat:'islami'},
+  {id:'sohbet',   time:'06:30', name:'Ali Esat Ağabey Sohbeti',    desc:'Google Meet',                  icon:'🌅', cat:'islami'},
+  {id:'zikir-s',  time:'07:00', name:'Sabah Zikri & Vird',         desc:'Günlük vird rutini',           icon:'📿', cat:'islami'},
+  {id:'hol1',     time:'08:00', name:'Hollandaca — Blok 1',        desc:'Kelime & Dinleme · 1 saat',    icon:'🇳🇱', cat:'hollandaca'},
+  {id:'yt1',      time:'09:30', name:'YouTube — Blok 1',           desc:'Fikir & Senaryo · 1.5 saat',  icon:'🎬', cat:'youtube'},
+  {id:'dua',      time:'11:00', name:'Online Dua Buluşması',       desc:'Arkadaşlarla · ~30 dk',       icon:'🤲', cat:'islami'},
+  {id:'ogle',     time:'13:29', name:'Öğle Namazı',                desc:'Zuhr vakti',                   icon:'☀️', cat:'islami'},
+  {id:'hol2',     time:'14:00', name:'Hollandaca — Blok 2',        desc:'Konuşma & Okuma · 1 saat',    icon:'🗣️', cat:'hollandaca'},
+  {id:'yt2',      time:'15:30', name:'YouTube — Blok 2',           desc:'Çekim & Düzenleme · 1.5 saat',icon:'🎥', cat:'youtube'},
+  {id:'ikindi',   time:'17:16', name:'İkindi Namazı',              desc:'Asr vakti',                    icon:'🌤️', cat:'islami'},
+  {id:'mahkeme',  time:'19:00', name:'Mahkeme Hazırlığı',          desc:'Belgeler & notlar · 30 dk',   icon:'⚖️', cat:'mahkeme'},
+  {id:'aksam',    time:'21:06', name:'Akşam Namazı',               desc:'Magrib vakti',                 icon:'🌆', cat:'islami'},
+  {id:'yt3',      time:'21:30', name:'YouTube — Blok 3',           desc:'Yükleme & Analiz · 1 saat',   icon:'📊', cat:'youtube'},
+  {id:'yatsi',    time:'23:01', name:'Yatsı Namazı',               desc:'İşa vakti',                    icon:'🌙', cat:'islami'},
+  {id:'zikir-a',  time:'23:30', name:'Akşam Zikri & Değerlendirme',desc:'Günlük muhasebe',             icon:'✨', cat:'islami'},
+];
+
+const PRAYERS = [
+  {name:'Sabah',  time:'03:58'},
+  {name:'Güneş',  time:'05:41'},
+  {name:'Öğle',   time:'13:29'},
+  {name:'İkindi', time:'17:16'},
+  {name:'Akşam',  time:'21:06'},
+  {name:'Yatsı',  time:'23:01'},
+];
+
+const HEALTH = [
+  {id:'walk',  icon:'🚶', name:'Yürüyüş',  off:'Yapılmadı',  on:'Yapıldı ✓'},
+  {id:'ex',    icon:'💪', name:'Egzersiz', off:'Yapılmadı',  on:'Yapıldı ✓'},
+  {id:'meals', icon:'🍽️', name:'Öğünler', off:'Takip et',   on:'Takip edildi ✓'},
+  {id:'sleep', icon:'😴', name:'Uyku',     off:'Eklenecek',  on:'Kaydedildi ✓'},
+];
+
+/* ══ STORAGE ══ */
+function dk(){const d=new Date();return`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+function dkOffset(n){const d=new Date();d.setDate(d.getDate()-n);return`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+
+const LS={
+  done:  ()=>{try{return JSON.parse(localStorage.getItem('done_'+dk())||'{}')}catch{return{}}},
+  saveDone: o=>localStorage.setItem('done_'+dk(),JSON.stringify(o)),
+  health:()=>{try{return JSON.parse(localStorage.getItem('hlth_'+dk())||'{}')}catch{return{}}},
+  saveHealth:o=>localStorage.setItem('hlth_'+dk(),JSON.stringify(o)),
+  water: ()=>parseInt(localStorage.getItem('watr_'+dk())||'0'),
+  saveWater:n=>localStorage.setItem('watr_'+dk(),n),
+  duties:()=>{try{return JSON.parse(localStorage.getItem('duty_'+dk())||'{}')}catch{return{}}},
+  saveDuties:o=>localStorage.setItem('duty_'+dk(),JSON.stringify(o)),
+  baba:  ()=>{try{return JSON.parse(localStorage.getItem('baba')||'[]')}catch{return[]}},
+  saveBaba:a=>localStorage.setItem('baba',JSON.stringify(a)),
+  alarms:()=>{try{return JSON.parse(localStorage.getItem('alrm_'+dk())||'[]')}catch{return[]}},
+  saveAlarms:a=>localStorage.setItem('alrm_'+dk(),JSON.stringify(a)),
+};
+
+/* ══ KURAN STORAGE ══ */
+const KS={
+  day:(offset)=>{
+    const k=offset?dkOffset(offset):dk();
+    try{return JSON.parse(localStorage.getItem('k_day_'+k)||'null')}catch{return null}
+  },
+  saveDay:(obj)=>localStorage.setItem('k_day_'+dk(),JSON.stringify(obj)),
+  meta:()=>{try{return JSON.parse(localStorage.getItem('k_meta')||'{}')}catch{return{}}},
+  saveMeta:o=>localStorage.setItem('k_meta',JSON.stringify(o)),
+};
+
+/* ══ TIME ══ */
+const pad=n=>String(n).padStart(2,'0');
+const parseT=s=>{const[h,m]=s.split(':').map(Number);return h*60+m};
+const nowM=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
+
+const DAYS_TR=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+const MONTHS_TR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+function updateDate(){
+  const d=new Date();
+  document.getElementById('dayName').textContent=DAYS_TR[d.getDay()];
+  document.getElementById('fullDate').textContent=`${d.getDate()} ${MONTHS_TR[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function updateCourt(){
+  const now=new Date();now.setHours(0,0,0,0);
+  const court=new Date();court.setDate(court.getDate()+62);court.setHours(0,0,0,0);
+  const days=Math.ceil((court-now)/86400000);
+  document.getElementById('courtNum').textContent=days;
+  const pd=document.getElementById('profileDays');
+  if(pd)pd.textContent=days;
+}
+
+/* ══ PRAYERS ══ */
+function renderPrayers(){
+  const row=document.getElementById('prayerRow');row.innerHTML='';
+  const nm=nowM();let activeIdx=-1;
+  PRAYERS.forEach((p,i)=>{if(parseT(p.time)<=nm)activeIdx=i});
+  PRAYERS.forEach((p,i)=>{
+    const pm=parseT(p.time);
+    const el=document.createElement('div');
+    el.className='prayer-pill'+(pm<nm&&i!==activeIdx?' past':'')+(i===activeIdx?' active':'');
+    el.innerHTML=`<div class="pp-name">${p.name}</div><div class="pp-time">${p.time}</div>`;
+    row.appendChild(el);
+  });
+}
+
+/* ══ HERO ══ */
+function getStatus(task,done){
+  const nm=nowM();const tm=parseT(task.time);const diff=tm-nm;
+  if(done[task.id])return'done';
+  if(diff<-60)return'missed';
+  if(diff>=-60&&diff<=0)return'now';
+  if(diff>0&&diff<=30)return'soon';
+  return'upcoming';
+}
+
+let heroInterval=null;
+function updateHero(){
+  const done=LS.done();const nm=nowM();const now=new Date();
+  let target=null;
+  for(const t of TASKS){const tm=parseT(t.time);if(!done[t.id]&&tm>nm){target=t;break}}
+  let current=null;
+  for(const t of TASKS){const tm=parseT(t.time);if(!done[t.id]&&tm<=nm&&nm-tm<=60){current=t;break}}
+  const show=current||target;
+  if(!show){
+    document.getElementById('heroChipText').textContent='Tamamlandı ✓';
+    document.getElementById('heroName').textContent='Bugünkü program bitti 🎉';
+    document.getElementById('heroSub').textContent='Harika bir gün geçirdin!';
+    document.getElementById('heroCountdown').style.display='none';
+    return;
+  }
+  document.getElementById('heroCountdown').style.display='flex';
+  document.getElementById('heroChipText').textContent=current?'Şu An Aktif':'Sıradaki';
+  document.getElementById('heroName').textContent=show.name;
+  document.getElementById('heroSub').textContent=`⏰ ${show.time} — ${show.desc}`;
+  const[th,tm2]=show.time.split(':').map(Number);
+  const tgt=new Date();tgt.setHours(th,tm2,0,0);
+  if(tgt<now&&!current)tgt.setDate(tgt.getDate()+1);
+  if(heroInterval)clearInterval(heroInterval);
+  heroInterval=setInterval(()=>{
+    const diff=Math.max(0,tgt-new Date());
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    document.getElementById('cdH').textContent=pad(h);
+    document.getElementById('cdM').textContent=pad(m);
+    document.getElementById('cdS').textContent=pad(s);
+  },1000);
+}
+
+/* ══ TASKS ══ */
+function renderTasks(){
+  const done=LS.done();
+  const list=document.getElementById('taskList');list.innerHTML='';
+  TASKS.forEach((t,i)=>{
+    const st=getStatus(t,done);
+    const el=document.createElement('div');
+    el.className='task'+(st==='done'?' done':'')+(st==='missed'?' missed':'')+(st==='now'?' task-now':'');
+    el.style.animationDelay=(i*0.04)+'s';
+    el.dataset.id=t.id;
+    let badge='';
+    if(st==='now')badge='<span class="badge badge-now">ŞİMDİ</span>';
+    if(st==='soon')badge='<span class="badge badge-soon">YAKINDA</span>';
+    el.innerHTML=`
+      <div class="task-check">${st==='done'?'✓':''}</div>
+      <div class="task-em">${t.icon}</div>
+      <div class="task-body">
+        <div class="task-row1"><span class="task-time">${t.time}</span>${badge}</div>
+        <div class="task-name">${t.name}</div>
+        <div class="task-desc">${t.desc}</div>
+      </div>
+      <span class="cat-tag cat-${t.cat}">${t.cat.charAt(0).toUpperCase()+t.cat.slice(1)}</span>
+    `;
+    el.addEventListener('click',()=>{
+      const d=LS.done();d[t.id]=!d[t.id];if(!d[t.id])delete d[t.id];LS.saveDone(d);
+      renderTasks();renderProgress();updateHero();
+    });
+    list.appendChild(el);
+  });
+}
+
+/* ══ PROGRESS ══ */
+const CATS=[
+  {key:'islami',    label:'🕌 İslami',    color:'#d4a84b'},
+  {key:'youtube',   label:'🎥 YouTube',   color:'#e05252'},
+  {key:'hollandaca',label:'🇳🇱 Hollandaca',color:'#4d9de0'},
+  {key:'mahkeme',   label:'⚖️ Mahkeme',   color:'#9b72cf'},
+];
+function renderProgress(){
+  const done=LS.done();
+  const sec=document.getElementById('progSection');sec.innerHTML='';
+  CATS.forEach(c=>{
+    const all=TASKS.filter(t=>t.cat===c.key);
+    const cnt=all.filter(t=>done[t.id]).length;
+    const pct=all.length?Math.round(cnt/all.length*100):0;
+    const d=document.createElement('div');d.className='prog-item';
+    d.innerHTML=`<div class="prog-row"><span class="prog-name">${c.label}</span><span class="prog-val">${cnt}/${all.length} · %${pct}</span></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>`;
+    sec.appendChild(d);
+  });
+}
+
+/* ══ HEALTH ══ */
+function renderHealth(){
+  const h=LS.health();const g=document.getElementById('healthGrid');g.innerHTML='';
+  HEALTH.forEach(item=>{
+    const done=!!h[item.id];
+    const el=document.createElement('div');el.className='health-card'+(done?' done':'');
+    el.innerHTML=`<div class="h-icon">${item.icon}</div><div class="h-name">${item.name}</div><div class="h-status">${done?item.on:item.off}</div>`;
+    el.addEventListener('click',()=>{const hh=LS.health();hh[item.id]=!hh[item.id];if(!hh[item.id])delete hh[item.id];LS.saveHealth(hh);renderHealth()});
+    g.appendChild(el);
+  });
+}
+
+/* ══ WATER ══ */
+function renderWater(){
+  const n=LS.water();document.getElementById('waterN').textContent=n;
+  const row=document.getElementById('cupsRow');row.innerHTML='';
+  for(let i=0;i<8;i++){
+    const c=document.createElement('div');c.className='cup'+(i<n?' full':'');c.textContent='💧';
+    c.addEventListener('click',()=>{const cur=LS.water();LS.saveWater(Math.min(8,i<cur?i:i+1));renderWater()});
+    row.appendChild(c);
+  }
+}
+
+/* ══ WEEK STRIP ══ */
+function renderWeek(){
+  const row=document.getElementById('weekRow');if(!row)return;row.innerHTML='';
+  const today=new Date();const dow=today.getDay();
+  const mon=new Date(today);mon.setDate(today.getDate()-(dow===0?6:dow-1));
+  ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'].forEach((n,i)=>{
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const isT=d.toDateString()===today.toDateString();
+    const el=document.createElement('div');el.className='week-day'+(isT?' today':'');
+    el.innerHTML=`<div class="wd-name">${n}</div><div class="wd-num">${d.getDate()}</div><div class="wd-dot"></div>`;
+    row.appendChild(el);
+  });
+}
+
+/* ══ DUTIES ══ */
+function toggleDuty(el){
+  const d=LS.duties();const k=el.dataset.duty;d[k]=!d[k];if(!d[k])delete d[k];LS.saveDuties(d);
+  el.classList.toggle('done',!!d[k]);
+}
+function renderDuties(){
+  const d=LS.duties();
+  document.querySelectorAll('.duty-row').forEach(el=>{el.classList.toggle('done',!!d[el.dataset.duty])});
+}
+
+/* ══ BABAM ══ */
+let currentBabaTab='not';
+let currentType='not';
+
+function switchBabaTab(tab,el){
+  currentBabaTab=tab;
+  document.querySelectorAll('.baba-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderBabaContent();
+}
+
+function renderBabaContent(){
+  const entries=LS.baba().filter(e=>e.type===currentBabaTab);
+  const c=document.getElementById('babaContent');
+  if(!entries.length){
+    const labels={not:'not veya anı',dua:'dua',arabic:'Arapça ibare'};
+    c.innerHTML=`<div class="baba-empty">Henüz bu bölümde ${labels[currentBabaTab]} yok.<br><span style="color:var(--gold)">+</span> butonuyla ekleyebilirsin.</div>`;
+    return;
+  }
+  c.innerHTML='';
+  entries.forEach(e=>{
+    const div=document.createElement('div');div.className='baba-entry';
+    const typeLabels={not:'📝 Not / Anı',dua:'🤲 Dua',arabic:'العربية'};
+    const typeColors={not:'var(--text2)',dua:'var(--green)',arabic:'var(--gold)'};
+    div.innerHTML=`
+      <div class="baba-entry-type" style="color:${typeColors[e.type]}">${typeLabels[e.type]}</div>
+      ${e.type==='arabic'?`<div class="baba-entry-arabic">${e.text}</div>`:`<div class="baba-entry-text">${e.text}</div>`}
+      <div class="baba-entry-date">${e.date}</div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function openModal(){
+  document.getElementById('babaModal').classList.add('open');
+  document.getElementById('babaInput').value='';
+  selectType('not');
+}
+function closeModal(){document.getElementById('babaModal').classList.remove('open')}
+
+function selectType(t){
+  currentType=t;
+  ['typeNote','typeDua','typeArabic'].forEach(id=>document.getElementById(id).classList.remove('sel'));
+  const map={not:'typeNote',dua:'typeDua',arabic:'typeArabic'};
+  document.getElementById(map[t]).classList.add('sel');
+  const inp=document.getElementById('babaInput');
+  if(t==='arabic'){
+    inp.classList.add('modal-arabic-input');inp.placeholder='بِسْمِ اللّٰهِ...';inp.dir='rtl';
+  }else{
+    inp.classList.remove('modal-arabic-input');inp.dir='ltr';
+    inp.placeholder=t==='not'?'Babam için bir not veya anı…':'Bir dua yaz…';
+  }
+}
+
+function saveBabaEntry(){
+  const text=document.getElementById('babaInput').value.trim();
+  if(!text)return;
+  const entries=LS.baba();
+  const d=new Date();
+  entries.unshift({type:currentType,text,date:`${d.getDate()} ${MONTHS_TR[d.getMonth()]} ${d.getFullYear()}`});
+  LS.saveBaba(entries);
+  closeModal();
+  currentBabaTab=currentType;
+  document.querySelectorAll('.baba-tab').forEach((t,i)=>{
+    const tabs=['not','dua','arabic'];
+    t.classList.toggle('active',tabs[i]===currentType);
+  });
+  renderBabaContent();
+  showToast('Kaydedildi','Babam bölümüne eklendi ✓','🕊️');
+}
+
+/* ══ KURAN ══ */
+function kGetDay(){return KS.day()||{pages:0,meal:false,note:''}}
+function kGetMeta(){
+  const m=KS.meta();
+  return{
+    totalPages:m.totalPages||0,
+    hatimCount:m.hatimCount||0,
+    streak:m.streak||0,
+    lastDate:m.lastDate||'',
+    completedCuz:m.completedCuz||[],
+  };
+}
+
+function kAddPages(n){
+  const day=kGetDay();
+  day.pages=Math.max(0,day.pages+n);
+  KS.saveDay(day);
+  const meta=kGetMeta();
+  if(n>0){
+    if(meta.lastDate!==dk()){
+      const yd=dkOffset(1);
+      meta.streak=meta.lastDate===yd?(meta.streak+1):1;
+      meta.lastDate=dk();
+    }
+    meta.totalPages+=1;
+    KS.saveMeta(meta);
+    if(day.pages===3)showToast('📖 Günlük hedef!','3 sayfa tamamlandı. Allah kabul etsin ✓','🤲');
+  }else if(n<0&&meta.totalPages>0){
+    meta.totalPages=Math.max(0,meta.totalPages-1);
+    KS.saveMeta(meta);
+  }
+  renderKuran();
+}
+
+function kToggleMeal(){
+  const day=kGetDay();day.meal=!day.meal;KS.saveDay(day);
+  kRenderMeal(day.meal);
+}
+
+function kRenderMeal(on){
+  const t=document.getElementById('kMealToggle');
+  const th=document.getElementById('kMealThumb');
+  if(!t||!th)return;
+  t.style.background=on?'var(--gold)':'var(--text3)';
+  th.style.left=on?'22px':'2px';
+}
+
+function kSaveNote(){
+  const day=kGetDay();
+  const el=document.getElementById('kNoteInput');
+  if(!el)return;
+  day.note=el.value.trim();
+  KS.saveDay(day);
+  showToast('Kaydedildi','Okuma notun kaydedildi ✓','📖');
+}
+
+function kToggleCuz(n){
+  const meta=kGetMeta();
+  const idx=meta.completedCuz.indexOf(n);
+  if(idx>=0)meta.completedCuz.splice(idx,1);
+  else{
+    meta.completedCuz.push(n);
+    if(meta.completedCuz.length===30){
+      meta.hatimCount+=1;
+      meta.completedCuz=[];
+      KS.saveMeta(meta);
+      showToast('🎉 Hatim Tamamlandı!','MaşaAllah! Allah kabul etsin. 🤲','📖');
+      renderKuran();
+      return;
+    }
+  }
+  KS.saveMeta(meta);
+  renderKuran();
+}
+
+function renderKuran(){
+  const day=kGetDay();
+  const meta=kGetMeta();
+
+  /* Ring */
+  const pct=Math.min(1,day.pages/3);
+  const ring=document.getElementById('kRing');
+  if(ring)ring.style.strokeDashoffset=(201.1*(1-pct)).toFixed(1);
+  const rn=document.getElementById('kRingN');if(rn)rn.textContent=day.pages;
+  const tn=document.getElementById('kTodayN');if(tn)tn.textContent=day.pages;
+
+  /* Stats */
+  const sp=document.getElementById('kStatPages');if(sp)sp.textContent=meta.totalPages;
+  const sh=document.getElementById('kStatHatim');if(sh)sh.textContent=meta.hatimCount;
+  const ss=document.getElementById('kStatStreak');if(ss)ss.textContent=meta.streak;
+
+  /* Hatim bar */
+  const inCycle=meta.totalPages%604;
+  const hpct=Math.round(inCycle/604*100);
+  const hf=document.getElementById('kHatimFill');if(hf)hf.style.width=hpct+'%';
+  const hi=document.getElementById('kHatimInfo');if(hi)hi.textContent=`%${hpct} · ${604-inCycle} kaldı`;
+
+  /* Meal toggle */
+  kRenderMeal(day.meal);
+
+  /* Cüz grid */
+  const grid=document.getElementById('kCuzGrid');
+  if(grid){
+    grid.innerHTML='';
+    for(let i=1;i<=30;i++){
+      const done=meta.completedCuz.includes(i);
+      const el=document.createElement('div');
+      el.className='k-cuz-box'+(done?' done':'');
+      el.innerHTML=`<div class="k-cuz-n">${i}</div><div class="k-cuz-ck">✓</div>`;
+      el.addEventListener('click',()=>kToggleCuz(i));
+      grid.appendChild(el);
+    }
+  }
+
+  /* Week chart */
+  const chart=document.getElementById('kWeekChart');
+  if(chart){
+    chart.innerHTML='';
+    const dnames=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+    const weekData=[];
+    for(let i=6;i>=0;i--){
+      const d=KS.day(i);
+      weekData.push(d?d.pages:0);
+    }
+    const maxP=Math.max(...weekData,3);
+    for(let i=0;i<7;i++){
+      const pages=weekData[i];
+      const isToday=i===6;
+      const d2=new Date();d2.setDate(d2.getDate()-(6-i));
+      const dname=dnames[(d2.getDay()+6)%7];
+      const barH=Math.max(3,Math.round(pages/maxP*44));
+      const wrap=document.createElement('div');
+      wrap.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%';
+      wrap.innerHTML=`
+        <div style="width:100%;height:${barH}px;border-radius:3px 3px 0 0;background:${isToday?'var(--gold)':'var(--gold-dim)'};border:1px solid ${isToday?'var(--gold)':'rgba(212,168,75,0.2)'};min-height:3px"></div>
+        <span style="font-size:8px;font-weight:600;color:${isToday?'var(--gold)':'var(--text3)'};text-transform:uppercase">${dname}</span>
+      `;
+      chart.appendChild(wrap);
+    }
+  }
+}
+
+function initKuranNote(){
+  const day=kGetDay();
+  const el=document.getElementById('kNoteInput');
+  if(el)el.value=day.note||'';
+}
+
+/* ══ NAV ══ */
+function switchPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='kuran')initKuranNote();
+}
+
+/* ══ TOAST ══ */
+function showToast(title,msg,icon){
+  const wrap=document.getElementById('toastWrap');
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<div class="toast-icon">${icon||'🔔'}</div><div class="toast-body"><div class="toast-ttl">${title}</div><div class="toast-msg">${msg}</div></div><div class="toast-x" onclick="this.parentElement.remove()">✕</div>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),300)},6000);
+}
+
+/* ══ VOICE / TTS ══ */
+let synth=window.speechSynthesis;
+let voices=[];
+function loadVoices(){voices=synth.getVoices()}
+loadVoices();
+if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=loadVoices;
+
+function getBestVoice(lang){
+  const trVoice=voices.find(v=>v.lang.startsWith('tr'));
+  if(trVoice&&lang==='tr')return trVoice;
+  return voices.find(v=>v.lang.startsWith('tr'))||voices[0]||null;
+}
+
+function speak(text,lang,onEnd){
+  if(!synth)return;
+  synth.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang=lang==='ar'?'ar-SA':'tr-TR';
+  utt.rate=0.88;utt.pitch=1.05;utt.volume=1;
+  const v=getBestVoice(lang);if(v)utt.voice=v;
+  const fab=document.getElementById('voiceFab');
+  const wf=document.getElementById('waveform');
+  fab.classList.add('speaking');wf.classList.add('active');
+  utt.onend=()=>{fab.classList.remove('speaking');wf.classList.remove('active');if(onEnd)onEnd()};
+  utt.onerror=()=>{fab.classList.remove('speaking');wf.classList.remove('active')};
+  synth.speak(utt);
+}
+
+function speakSequence(parts){
+  if(!parts.length)return;
+  const[{text,lang},...rest]=parts;
+  speak(text,lang,()=>speakSequence(rest));
+}
+
+function openAssistant(){
+  document.getElementById('assistOverlay').classList.add('open');
+  document.getElementById('assistPanel').classList.add('open');
+}
+function closeAssistant(){
+  synth&&synth.cancel();
+  document.getElementById('voiceFab').classList.remove('speaking');
+  document.getElementById('waveform').classList.remove('active');
+  document.getElementById('assistOverlay').classList.remove('open');
+  document.getElementById('assistPanel').classList.remove('open');
+}
+
+function speakNow(){
+  const done=LS.done();const nm=nowM();const now=new Date();const h=now.getHours();
+  let current=null,next=null;
+  for(const t of TASKS){const tm=parseT(t.time);if(!done[t.id]&&tm<=nm&&nm-tm<=60){current=t;break}}
+  for(const t of TASKS){const tm=parseT(t.time);if(!done[t.id]&&tm>nm){next=t;break}}
+  const dhikrDone=done['zikir-s'];
+  const parts=[];
+  parts.push({text:`${h<5?'Gece hayırlı olsun':h<12?'Günaydın':h<17?'İyi öğleden sonralar':'İyi akşamlar'} Halil İbrahim! Umarım iyisindir.`,lang:'tr'});
+  if(current)parts.push({text:`Şu an sıradaki görevin: ${current.name}. ${current.desc}. Başlamak için ne güzel bir an!`,lang:'tr'});
+  if(!dhikrDone&&nm>parseT('07:00')&&nm<parseT('12:00')){
+    parts.push({text:'Sabah zikrin henüz yapılmadı. Şimdi birlikte üç kere söyleyelim.',lang:'tr'});
+    parts.push({text:'لَا إِلَٰهَ إِلَّا اللَّٰهُ',lang:'ar'});
+    parts.push({text:'لَا إِلَٰهَ إِلَّا اللَّٰهُ',lang:'ar'});
+    parts.push({text:'لَا إِلَٰهَ إِلَّا اللَّٰهُ',lang:'ar'});
+    parts.push({text:'Allah kabul etsin. Zikirler gönüle huzur verir.',lang:'tr'});
+  }
+  if(next){
+    const diff=parseT(next.time)-nm;
+    const diffText=diff>60?`yaklaşık ${Math.floor(diff/60)} saat ${diff%60} dakika`:`${diff} dakika`;
+    parts.push({text:`Sırada ${next.name} var. Başlamasına ${diffText} kaldı.`,lang:'tr'});
+    if(next.cat==='youtube')parts.push({text:'YouTube çalışmaların çok önemli. Her video, seni hedefe bir adım daha yaklaştırıyor. Devam et!',lang:'tr'});
+    else if(next.cat==='hollandaca')parts.push({text:"Hollandaca pratiğin Utrecht'teki geleceğin için kritik. Gülümse ve öğren!",lang:'tr'});
+    else if(next.cat==='islami')parts.push({text:'Allah rızası için yaptığın her ibadet, seni yüceltir. Sabırla devam et.',lang:'tr'});
+    else if(next.cat==='mahkeme')parts.push({text:'Mahkeme hazırlığını aksatma. Her not, her belge önemli.',lang:'tr'});
+  }
+  document.getElementById('assistBubble').innerHTML=parts.map(p=>p.lang==='ar'?`<span class="arabic">${p.text}</span>`:`<span>${p.text} </span>`).join('');
+  speakSequence(parts);
+}
+
+function speakPrayer(){
+  const nm=nowM();let nextP=null;
+  for(const p of PRAYERS){if(parseT(p.time)>nm){nextP=p;break}}
+  const parts=[];
+  if(nextP){
+    const diff=parseT(nextP.time)-nm;
+    parts.push({text:`Bir sonraki namaz vakti ${nextP.name}, saat ${nextP.time}'de. ${diff} dakika var.`,lang:'tr'});
+    parts.push({text:'Her namazı vaktinde kılmak, günün en güzel durakları. Namaz ruhu dinlendirir.',lang:'tr'});
+    parts.push({text:'الصَّلَاةُ خَيْرٌ مِّنَ النَّوْمِ',lang:'ar'});
+    parts.push({text:'Es-Salatü hayrun mine-n-nevm. Namaz uykudan hayırlıdır.',lang:'tr'});
+  }else{
+    parts.push({text:'Bugünkü namaz vakitleri tamamlandı. Allah kabul etsin!',lang:'tr'});
+  }
+  document.getElementById('assistBubble').innerHTML=parts.map(p=>p.lang==='ar'?`<span class="arabic">${p.text}</span>`:`${p.text} `).join('');
+  speakSequence(parts);
+}
+
+function speakZikir(){
+  const parts=[
+    {text:"Halil İbrahim, şimdi birlikte sabah zikrini yapalım. Hazır mısın?",lang:'tr'},
+    {text:'سُبْحَانَ اللَّٰهِ',lang:'ar'},{text:'Sübhanallah.',lang:'tr'},
+    {text:'الْحَمْدُ لِلَّٰهِ',lang:'ar'},{text:'Elhamdülillah.',lang:'tr'},
+    {text:'اللَّٰهُ أَكْبَرُ',lang:'ar'},{text:"Allahuekber. Allah'ın zikriyle kalpler huzur bulur.",lang:'tr'},
+  ];
+  document.getElementById('assistBubble').innerHTML=`Seninle birlikte zikir yapıyorum…<span class="arabic">سُبْحَانَ اللَّٰهِ · الْحَمْدُ لِلَّٰهِ · اللَّٰهُ أَكْبَرُ</span><span style="color:var(--text2);font-size:12px">Sübhanallah · Elhamdülillah · Allahuekber</span>`;
+  speakSequence(parts);
+}
+
+function speakMotivation(){
+  const msgs=[
+    {text:"Halil İbrahim, sen şu an çok zor bir yoldasın. Hollanda'da, yalnız, mahkeme beklerken bile her gün ayağa kalkıyorsun. Bu cesaret az insanda bulunur.",lang:'tr'},
+    {text:"YouTube'da başladığın yolculuk, sadece bir kanal değil. Kendi sesini dünyaya duyurmak. Devam et.",lang:'tr'},
+    {text:"Babana en güzel hediye, dik durman ve vazifelerini yapman. Her namaz, her zikir onu hatırlayarak kıldığında daha güzel.",lang:'tr'},
+    {text:'إِنَّ مَعَ الْعُسْرِ يُسْرًا',lang:'ar'},
+    {text:"'Her zorlukla birlikte bir kolaylık vardır.' Bu Allah'ın sözü. Zamanı gelecek, merak etme.",lang:'tr'},
+  ];
+  document.getElementById('assistBubble').innerHTML=msgs.map(p=>p.lang==='ar'?`<span class="arabic">${p.text}</span>`:`${p.text} `).join('');
+  speakSequence(msgs);
+}
+
+/* ══ ALARMS ══ */
+function checkAlarms(){
+  const shown=LS.alarms();const done=LS.done();const nm=nowM();
+  TASKS.forEach(t=>{
+    const tm=parseT(t.time);const diff=tm-nm;
+    const wk='w_'+t.id,nk='n_'+t.id;
+    if(diff>=4&&diff<=5&&!shown.includes(wk)&&!done[t.id]){
+      shown.push(wk);LS.saveAlarms(shown);
+      showToast('⏳ 5 dakika kaldı',t.name,t.icon);
+      notify('⏳ 5 dakika kaldı: '+t.name,t.desc);
+    }
+    if(diff>=-1&&diff<=0&&!shown.includes(nk)&&!done[t.id]){
+      shown.push(nk);LS.saveAlarms(shown);
+      showToast('🔔 Şimdi',t.name,t.icon);
+      notify('🔔 Şimdi: '+t.name,t.desc);
+    }
+  });
+}
+
+function notify(title,body){
+  if('Notification'in window&&Notification.permission==='granted'){
+    new Notification(title,{body});
+  }
+}
+
+/* ══ INIT ══ */
+function fullRender(){
+  updateDate();updateCourt();renderPrayers();
+  renderTasks();renderProgress();renderHealth();renderWater();
+  renderWeek();renderDuties();updateHero();renderBabaContent();
+  renderKuran();
+}
+
+fullRender();
+setInterval(checkAlarms,30000);
+setInterval(renderPrayers,60000);
+setInterval(()=>{updateDate();updateCourt()},60000);
+
+if('Notification'in window&&Notification.permission==='default'){
+  Notification.requestPermission();
+}
+
+setTimeout(()=>{
+  const h=new Date().getHours();
+  const g=h<5?'Geceniz hayırlı olsun':h<12?'Günaydın':h<17?'İyi günler':'İyi akşamlar';
+  showToast(g+' Halil İbrahim 🌟','Bismillah, hazırsın. 🎙️ tuşuna bas!','🕌');
+},900);
+
+document.getElementById('babaModal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('babaModal'))closeModal();
+});
+</script>
+</body>
+</html>
