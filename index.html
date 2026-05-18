@@ -693,6 +693,49 @@ body::before{
 .k-cuz-box.done .k-cuz-n{color:var(--gold)}
 .k-cuz-ck{font-size:8px;color:var(--gold);line-height:1;height:0;overflow:hidden;transition:height 0.15s}
 .k-cuz-box.done .k-cuz-ck{height:10px}
+
+/* ─────────────────────────────────────────
+   EZBER PAGE
+───────────────────────────────────────── */
+.ez-hero{background:linear-gradient(135deg,rgba(212,168,75,0.12),rgba(212,168,75,0.04));border:1px solid rgba(212,168,75,0.25);border-radius:var(--r);padding:18px;margin-bottom:10px;text-align:center}
+.ez-hero-ar{font-family:'Amiri Quran',serif;font-size:22px;color:var(--gold);margin-bottom:6px}
+.ez-sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px 15px;margin-bottom:7px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.2s,transform 0.1s}
+.ez-sc:active{transform:scale(0.98)}
+.ez-sc.ez-done{border-color:rgba(58,170,104,0.4)}
+.ez-sn{width:32px;height:32px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);flex-shrink:0}
+.ez-sar{font-family:'Amiri Quran',serif;font-size:17px;color:var(--text);direction:rtl}
+.ez-str{font-size:12px;color:var(--text2);margin-top:1px}
+.ez-bar{height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden}
+.ez-bfill{height:100%;border-radius:2px;transition:width 0.3s}
+.ez-sess-hdr{display:flex;align-items:center;gap:10px;padding:12px 0;margin-bottom:6px}
+.ez-back{width:36px;height:36px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0}
+.ez-ayah-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 18px;min-height:140px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;margin-bottom:10px;position:relative;overflow:hidden}
+.ez-arabic{font-family:'Amiri Quran',serif;font-size:22px;color:var(--text);direction:rtl;text-align:right;line-height:2.2;width:100%;transition:filter 0.3s,opacity 0.3s}
+.ez-arabic.ez-blur{filter:blur(8px);opacity:0.4;user-select:none}
+.ez-aynum{position:absolute;top:10px;left:14px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.ez-ctrl-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.ez-ctrl{padding:12px 10px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s}
+.ez-ctrl:active{transform:scale(0.96)}
+.ez-ctrl.ez-active{background:rgba(58,170,104,0.15);border-color:rgba(58,170,104,0.4);color:var(--green)}
+.ez-ctrl.ez-mic-on{background:rgba(224,82,82,0.15);border-color:rgba(224,82,82,0.4);color:var(--red);animation:micPulse 1.2s ease-in-out infinite}
+@keyframes micPulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.ez-fbbox{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;direction:rtl;text-align:right;font-family:'Amiri Quran',serif;font-size:18px;line-height:2.2;min-height:50px}
+.ez-wd{display:inline-block;margin:0 3px;padding:2px 5px;border-radius:5px}
+.ez-ok{color:var(--green);background:rgba(58,170,104,0.12)}
+.ez-bad{color:var(--red);background:rgba(224,82,82,0.12)}
+.ez-miss{color:var(--text3);text-decoration:underline dotted}
+.ez-xtra{color:var(--purple);opacity:0.7}
+.ez-nav-row{display:flex;gap:8px;margin-bottom:10px}
+.ez-nbtn{flex:1;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.ez-nbtn:active{transform:scale(0.97)}
+.ez-nbtn.ez-prime{background:var(--gold);color:#080b10;border-color:transparent;font-weight:700}
+.ez-stat-row{display:flex;gap:8px;margin-bottom:10px}
+.ez-stat{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center}
+.ez-stat-v{font-family:'DM Mono',monospace;font-size:18px;font-weight:700}
+.ez-stat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.ez-spin{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;color:var(--text3);font-size:13px;position:absolute;inset:0;background:var(--card);border-radius:var(--r)}
+.ez-spin::before{content:'';width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -994,6 +1037,71 @@ body::before{
   </div>
 </div>
 
+<!-- EZBER -->
+<div class="page" id="page-ezber">
+
+  <!-- LİST VIEW -->
+  <div id="ezListV">
+    <div class="ez-hero">
+      <div class="ez-hero-ar">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin:6px 0 3px">Kuran Ezber</div>
+      <div style="font-size:11px;color:var(--text2)">Cüz Amma · 38 Sure · Ses Tanıma ile Pratik</div>
+    </div>
+    <div class="ez-stat-row">
+      <div class="ez-stat"><div class="ez-stat-v" id="ezStatS" style="color:var(--gold)">0</div><div class="ez-stat-l">Sure</div></div>
+      <div class="ez-stat"><div class="ez-stat-v" id="ezStatA" style="color:var(--green)">0</div><div class="ez-stat-l">Ayet</div></div>
+      <div class="ez-stat"><div class="ez-stat-v" id="ezStatO" style="color:var(--blue)">0</div><div class="ez-stat-l">Oturum</div></div>
+    </div>
+    <div class="sec-label">Sureler</div>
+    <div id="ezberList"></div>
+  </div>
+
+  <!-- SESSION VIEW -->
+  <div id="ezSessV" style="display:none">
+    <div class="ez-sess-hdr">
+      <div class="ez-back" onclick="ezBack()">←</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;color:var(--text)" id="ezSessName"></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:1px" id="ezSessProg"></div>
+      </div>
+      <div style="font-family:'Amiri Quran',serif;font-size:20px;color:var(--gold)" id="ezSessAr"></div>
+    </div>
+    <div class="prog-track" style="margin-bottom:14px">
+      <div id="ezProgBar" class="prog-fill" style="width:0%;background:var(--gold)"></div>
+    </div>
+    <div class="ez-ayah-card" id="ezAyahCard">
+      <div class="ez-aynum" id="ezAyNum">Ayet 1</div>
+      <div class="ez-arabic" id="ezAyahTxt">يُحمَّل...</div>
+      <div id="ezLoader" class="ez-spin" style="display:none">Yükleniyor…</div>
+    </div>
+    <div class="ez-ctrl-row">
+      <button class="ez-ctrl" id="ezHideBtn" onclick="ezToggleHide()">
+        <span id="ezHideIco">👁️</span><span id="ezHideLbl">Gizle</span>
+      </button>
+      <button class="ez-ctrl" id="ezMicBtn" onclick="ezToggleMic()">
+        <span id="ezMicIco">🎙️</span><span id="ezMicLbl">Dinle</span>
+      </button>
+    </div>
+    <div id="ezFeedback" style="display:none">
+      <div class="sec-label">Okuduğunuz</div>
+      <div class="ez-fbbox" id="ezWords"></div>
+      <div class="ez-stat-row">
+        <div class="ez-stat"><div class="ez-stat-v" id="ezScOk" style="color:var(--green)">0</div><div class="ez-stat-l">Doğru</div></div>
+        <div class="ez-stat"><div class="ez-stat-v" id="ezScBad" style="color:var(--red)">0</div><div class="ez-stat-l">Hatalı</div></div>
+        <div class="ez-stat"><div class="ez-stat-v" id="ezScPct" style="color:var(--gold)">-%</div><div class="ez-stat-l">Doğruluk</div></div>
+      </div>
+    </div>
+    <div class="ez-nav-row">
+      <button class="ez-nbtn" onclick="ezPrev()">← Önceki</button>
+      <button class="ez-nbtn ez-prime" onclick="ezNext()">Sonraki →</button>
+    </div>
+    <button id="ezMarkBtn" onclick="ezMarkDone()" style="width:100%;padding:13px;border-radius:12px;border:1px solid rgba(58,170,104,0.35);background:rgba(58,170,104,0.1);color:var(--green);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:16px">
+      ✓ Bu Ayeti Ezberlediğim Olarak İşaretle
+    </button>
+  </div>
+
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-btn active" onclick="switchPage('bugun',this)">
@@ -1001,6 +1109,9 @@ body::before{
   </button>
   <button class="nav-btn" onclick="switchPage('kuran',this)">
     <span class="nav-icon">📖</span><span class="nav-label">Kuran</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('ezber',this)">
+    <span class="nav-icon">🧠</span><span class="nav-label">Ezber</span>
   </button>
   <button class="nav-btn" onclick="switchPage('haftalik',this)">
     <span class="nav-icon">📅</span><span class="nav-label">Haftalık</span>
@@ -1485,6 +1596,7 @@ function switchPage(id,btn){
   btn.classList.add('active');
   window.scrollTo(0,0);
   if(id==='kuran')initKuranNote();
+  if(id==='ezber')renderEzberList();
 }
 
 /* ══ TOAST ══ */
@@ -1634,6 +1746,237 @@ function notify(title,body){
   if('Notification'in window&&Notification.permission==='granted'){
     new Notification(title,{body});
   }
+}
+
+/* ══ EZBER ══ */
+const EZBER_SURAHS=[
+  {num:1,  name:'El-Fatiha',     ar:'الفاتحة',    ayahs:7,  tr:'Açılış Suresi'},
+  {num:78, name:'En-Nebe',       ar:'النبأ',       ayahs:40, tr:'Büyük Haber'},
+  {num:79, name:'En-Naziat',     ar:'النازعات',    ayahs:46, tr:'Koparanlar'},
+  {num:80, name:'Abese',         ar:'عبس',         ayahs:42, tr:'Çattı Kaşını'},
+  {num:81, name:'Et-Tekvir',     ar:'التكوير',     ayahs:29, tr:'Dürülme'},
+  {num:82, name:'El-İnfitar',    ar:'الانفطار',    ayahs:19, tr:'Yarılma'},
+  {num:83, name:'El-Mutaffifin', ar:'المطففين',    ayahs:36, tr:'Ölçüde Aldatanlar'},
+  {num:84, name:'El-İnşikak',    ar:'الانشقاق',    ayahs:25, tr:'Çatlama'},
+  {num:85, name:'El-Buruc',      ar:'البروج',      ayahs:22, tr:'Burçlar'},
+  {num:86, name:'Et-Tarık',      ar:'الطارق',      ayahs:17, tr:'Gece Gelen'},
+  {num:87, name:'El-Ala',        ar:'الأعلى',      ayahs:19, tr:'En Yüce'},
+  {num:88, name:'El-Gaşiye',     ar:'الغاشية',     ayahs:26, tr:'Bürüyen'},
+  {num:89, name:'El-Fecr',       ar:'الفجر',       ayahs:30, tr:'Şafak'},
+  {num:90, name:'El-Beled',      ar:'البلد',       ayahs:20, tr:'Şehir'},
+  {num:91, name:'Eş-Şems',       ar:'الشمس',       ayahs:15, tr:'Güneş'},
+  {num:92, name:'El-Leyl',       ar:'الليل',       ayahs:21, tr:'Gece'},
+  {num:93, name:'Ed-Duha',       ar:'الضحى',       ayahs:11, tr:'Kuşluk'},
+  {num:94, name:'Eş-Şerh',       ar:'الشرح',       ayahs:8,  tr:'Göğsü Açma'},
+  {num:95, name:'Et-Tin',        ar:'التين',       ayahs:8,  tr:'İncir'},
+  {num:96, name:'El-Alak',       ar:'العلق',       ayahs:19, tr:'Alak / Pıhtı'},
+  {num:97, name:'El-Kadr',       ar:'القدر',       ayahs:5,  tr:'Kadir Gecesi'},
+  {num:98, name:'El-Beyyine',    ar:'البينة',      ayahs:8,  tr:'Açık Delil'},
+  {num:99, name:'Ez-Zelzele',    ar:'الزلزلة',     ayahs:8,  tr:'Deprem'},
+  {num:100,name:'El-Adiyat',     ar:'العاديات',    ayahs:11, tr:'Koşanlar'},
+  {num:101,name:'El-Karia',      ar:'القارعة',     ayahs:11, tr:'Çarpıcı'},
+  {num:102,name:'Et-Tekasür',    ar:'التكاثر',     ayahs:8,  tr:'Çoğalma Yarışı'},
+  {num:103,name:'El-Asr',        ar:'العصر',       ayahs:3,  tr:'Asır / Zaman'},
+  {num:104,name:'El-Humeze',     ar:'الهمزة',      ayahs:9,  tr:'Zemmedici'},
+  {num:105,name:'El-Fil',        ar:'الفيل',       ayahs:5,  tr:'Fil'},
+  {num:106,name:'Kureyş',        ar:'قريش',        ayahs:4,  tr:'Kureyş'},
+  {num:107,name:'El-Maun',       ar:'الماعون',     ayahs:7,  tr:'Yardım'},
+  {num:108,name:'El-Kevser',     ar:'الكوثر',      ayahs:3,  tr:'Kevser'},
+  {num:109,name:'El-Kafirun',    ar:'الكافرون',    ayahs:6,  tr:'Kafirler'},
+  {num:110,name:'En-Nasr',       ar:'النصر',       ayahs:3,  tr:'Yardım'},
+  {num:111,name:'El-Mesed',      ar:'المسد',       ayahs:5,  tr:'Hurma Lifi'},
+  {num:112,name:'El-İhlas',      ar:'الإخلاص',     ayahs:4,  tr:'Samimiyet'},
+  {num:113,name:'El-Felak',      ar:'الفلق',       ayahs:5,  tr:'Şafak'},
+  {num:114,name:'En-Nas',        ar:'الناس',       ayahs:6,  tr:'İnsanlar'},
+];
+
+const ES={
+  prog:()=>{try{return JSON.parse(localStorage.getItem('ez_prog')||'{}')}catch{return{}}},
+  saveProg:o=>localStorage.setItem('ez_prog',JSON.stringify(o)),
+  sess:()=>parseInt(localStorage.getItem('ez_sess')||'0'),
+  addSess:()=>localStorage.setItem('ez_sess',String(ES.sess()+1)),
+};
+
+let EZ={surah:null,idx:0,ayahs:[],hidden:false,rec:null,busy:false};
+
+function renderEzberList(){
+  const prog=ES.prog();
+  const list=document.getElementById('ezberList');
+  list.innerHTML='';
+  let totMem=0,totAy=0;
+  EZBER_SURAHS.forEach(s=>{
+    const k='s'+s.num;
+    const mem=prog[k]?Object.keys(prog[k]).length:0;
+    const pct=Math.round(mem/s.ayahs*100);
+    if(pct===100)totMem++;
+    totAy+=mem;
+    const col=pct===100?'var(--green)':pct>0?'var(--gold)':'var(--border)';
+    const el=document.createElement('div');
+    el.className='ez-sc'+(pct===100?' ez-done':'');
+    el.onclick=()=>ezberOpen(s);
+    el.innerHTML=`<div class="ez-sn">${s.num}</div><div style="flex:1;min-width:0"><div class="ez-sar">${s.ar} · ${s.name}</div><div class="ez-str">${s.tr} · ${s.ayahs} ayet</div><div class="ez-bar"><div class="ez-bfill" style="width:${pct}%;background:${col}"></div></div></div><div style="font-size:11px;color:${pct>0?'var(--gold)':'var(--text3)'};font-family:'DM Mono',monospace;text-align:right;flex-shrink:0">${pct}%<br><span style="font-size:9px;color:var(--text3)">${mem}/${s.ayahs}</span></div>`;
+    list.appendChild(el);
+  });
+  document.getElementById('ezStatS').textContent=totMem;
+  document.getElementById('ezStatA').textContent=totAy;
+  document.getElementById('ezStatO').textContent=ES.sess();
+}
+
+async function ezberOpen(surah){
+  EZ.surah=surah;EZ.idx=0;EZ.hidden=false;EZ.ayahs=[];
+  document.getElementById('ezListV').style.display='none';
+  document.getElementById('ezSessV').style.display='block';
+  document.getElementById('ezSessName').textContent=surah.name;
+  document.getElementById('ezSessAr').textContent=surah.ar;
+  ezUpdateSessUI();
+  await ezFetch(surah.num);
+}
+
+async function ezFetch(num){
+  if(EZ.busy)return;EZ.busy=true;
+  document.getElementById('ezLoader').style.display='flex';
+  document.getElementById('ezAyahTxt').style.opacity='0.2';
+  try{
+    const r=await fetch('https://api.alquran.cloud/v1/surah/'+num);
+    const d=await r.json();
+    if(d.code===200){EZ.ayahs=d.data.ayahs.map(a=>a.text);ezUpdateAyah();}
+    else showToast('Hata','Sure yüklenemedi','⚠️');
+  }catch{showToast('Bağlantı Hatası','İnternet bağlantısı gerekiyor','📡');}
+  finally{EZ.busy=false;document.getElementById('ezLoader').style.display='none';document.getElementById('ezAyahTxt').style.opacity='1';}
+}
+
+function ezUpdateAyah(){
+  if(!EZ.ayahs.length)return;
+  const txt=document.getElementById('ezAyahTxt');
+  txt.textContent=EZ.ayahs[EZ.idx];
+  txt.className='ez-arabic'+(EZ.hidden?' ez-blur':'');
+  document.getElementById('ezAyNum').textContent='Ayet '+(EZ.idx+1);
+  const prog=ES.prog();const k='s'+EZ.surah.num;
+  const mem=prog[k]&&prog[k][EZ.idx];
+  const mb=document.getElementById('ezMarkBtn');
+  mb.style.background=mem?'rgba(58,170,104,0.25)':'rgba(58,170,104,0.1)';
+  mb.textContent=mem?'✓ Ezberlendi (İşaretli)':'✓ Bu Ayeti Ezberlediğim Olarak İşaretle';
+  document.getElementById('ezFeedback').style.display='none';
+  ezUpdateSessUI();
+}
+
+function ezUpdateSessUI(){
+  if(!EZ.surah)return;
+  const prog=ES.prog();const k='s'+EZ.surah.num;
+  const mem=prog[k]?Object.keys(prog[k]).length:0;
+  const pct=Math.round(mem/EZ.surah.ayahs*100);
+  document.getElementById('ezSessProg').textContent=`${EZ.idx+1} / ${EZ.surah.ayahs} ayet · %${pct} ezberlendi`;
+  document.getElementById('ezProgBar').style.width=pct+'%';
+}
+
+function ezNext(){
+  if(!EZ.ayahs.length)return;
+  if(EZ.idx<EZ.ayahs.length-1){EZ.idx++;EZ.hidden=false;ezHideReset();ezUpdateAyah();}
+  else{showToast('Sure Bitti',EZ.surah.name+' tamamlandı!','🎉');ES.addSess();}
+}
+function ezPrev(){
+  if(EZ.ayahs.length&&EZ.idx>0){EZ.idx--;EZ.hidden=false;ezHideReset();ezUpdateAyah();}
+}
+function ezBack(){
+  ezStopMic();
+  document.getElementById('ezSessV').style.display='none';
+  document.getElementById('ezListV').style.display='block';
+  renderEzberList();
+}
+
+function ezToggleHide(){
+  EZ.hidden=!EZ.hidden;
+  document.getElementById('ezAyahTxt').className='ez-arabic'+(EZ.hidden?' ez-blur':'');
+  const btn=document.getElementById('ezHideBtn');
+  btn.classList.toggle('ez-active',EZ.hidden);
+  document.getElementById('ezHideIco').textContent=EZ.hidden?'🫣':'👁️';
+  document.getElementById('ezHideLbl').textContent=EZ.hidden?'Göster':'Gizle';
+}
+function ezHideReset(){
+  EZ.hidden=false;
+  document.getElementById('ezAyahTxt').className='ez-arabic';
+  document.getElementById('ezHideBtn').classList.remove('ez-active');
+  document.getElementById('ezHideIco').textContent='👁️';
+  document.getElementById('ezHideLbl').textContent='Gizle';
+}
+
+function ezMarkDone(){
+  const prog=ES.prog();const k='s'+EZ.surah.num;
+  if(!prog[k])prog[k]={};
+  if(prog[k][EZ.idx]){delete prog[k][EZ.idx];showToast('İşaret Kaldırıldı',EZ.surah.name+' · Ayet '+(EZ.idx+1),'📝');}
+  else{prog[k][EZ.idx]=1;showToast('Ezberlendi! ✓',EZ.surah.name+' · Ayet '+(EZ.idx+1),'🌟');}
+  ES.saveProg(prog);ezUpdateAyah();
+}
+
+/* ══ EZBER SES TANIMA ══ */
+function normAr(t){
+  return t.replace(/[ً-ٰٟ]/g,'')
+          .replace(/[آأإٱ]/g,'ا')
+          .replace(/ة/g,'ه')
+          .replace(/ى/g,'ي')
+          .replace(/\s+/g,' ').trim();
+}
+
+function cmpWords(exp,got){
+  const ew=normAr(exp).split(' ');
+  const gw=normAr(got).split(' ');
+  let ok=0;const res=[];
+  ew.forEach((w,i)=>{
+    if(!gw[i])res.push({w,s:'miss'});
+    else if(w===gw[i]){res.push({w:gw[i],s:'ok'});ok++;}
+    else res.push({w:gw[i],s:'bad'});
+  });
+  for(let i=ew.length;i<gw.length;i++)res.push({w:gw[i],s:'xtra'});
+  return{res,ok,total:ew.length};
+}
+
+function ezToggleMic(){if(EZ.rec)ezStopMic();else ezStartMic();}
+
+function ezStartMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('Desteklenmiyor','Chrome tarayıcısı önerilir','⚠️');return;}
+  const r=new SR();
+  r.lang='ar-SA';r.continuous=false;r.interimResults=false;r.maxAlternatives=1;
+  r.onstart=()=>{
+    EZ.rec=r;
+    document.getElementById('ezMicBtn').classList.add('ez-mic-on');
+    document.getElementById('ezMicIco').textContent='⏹️';
+    document.getElementById('ezMicLbl').textContent='Durdur';
+  };
+  r.onresult=e=>ezProcessRec(e.results[0][0].transcript);
+  r.onerror=e=>{
+    ezStopMic();
+    if(e.error==='no-speech')showToast('Ses Algılanmadı','Tekrar deneyin','🎙️');
+    else if(e.error==='not-allowed')showToast('İzin Gerekli','Mikrofon erişimine izin verin','🎙️');
+  };
+  r.onend=ezStopMic;
+  r.start();
+}
+
+function ezStopMic(){
+  if(EZ.rec){try{EZ.rec.stop();}catch{}EZ.rec=null;}
+  const b=document.getElementById('ezMicBtn');
+  if(b){b.classList.remove('ez-mic-on');document.getElementById('ezMicIco').textContent='🎙️';document.getElementById('ezMicLbl').textContent='Dinle';}
+}
+
+function ezProcessRec(transcript){
+  if(!EZ.ayahs.length)return;
+  const{res,ok,total}=cmpWords(EZ.ayahs[EZ.idx],transcript);
+  const pct=total>0?Math.round(ok/total*100):0;
+  const bad=res.filter(w=>w.s==='bad'||w.s==='miss').length;
+  document.getElementById('ezFeedback').style.display='block';
+  document.getElementById('ezWords').innerHTML=res.map(w=>`<span class="ez-wd ez-${w.s==='ok'?'ok':w.s==='bad'?'bad':w.s==='xtra'?'xtra':'miss'}">${w.w}</span>`).join(' ');
+  document.getElementById('ezScOk').textContent=ok;
+  document.getElementById('ezScBad').textContent=bad;
+  document.getElementById('ezScPct').textContent='%'+pct;
+  if(pct>=90){
+    showToast('Maşallah! 🌟','Ayet '+(EZ.idx+1)+' · %'+pct+' doğru','✨');
+    const prog=ES.prog();const k='s'+EZ.surah.num;
+    if(!prog[k])prog[k]={};prog[k][EZ.idx]=1;ES.saveProg(prog);ezUpdateSessUI();
+    document.getElementById('ezMarkBtn').style.background='rgba(58,170,104,0.25)';
+    document.getElementById('ezMarkBtn').textContent='✓ Ezberlendi (İşaretli)';
+  }else if(pct>=70){showToast('İyi Gidiyor 👍','%'+pct+' doğru · Biraz daha pratik yap','📖');}
+  else{showToast('Tekrar Dene 💪','%'+pct+' doğru · Metni görerek tekrar et','🔄');}
 }
 
 /* ══ INIT ══ */
