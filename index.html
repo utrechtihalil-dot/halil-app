@@ -736,6 +736,16 @@ body::before{
 .ez-spin{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;color:var(--text3);font-size:13px;position:absolute;inset:0;background:var(--card);border-radius:var(--r)}
 .ez-spin::before{content:'';width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+.ez-reciter-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.ez-reciter-scroll::-webkit-scrollbar{display:none}
+.ez-reciter-chip{flex-shrink:0;padding:8px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'DM Sans',sans-serif;text-align:center;line-height:1.4}
+.ez-reciter-chip.ez-rc-active{background:var(--gold-dim);border-color:rgba(212,168,75,0.4);color:var(--gold)}
+.ez-audio-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.ez-play-btn{width:42px;height:42px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;transition:transform 0.15s;color:#080b10}
+.ez-play-btn:active{transform:scale(0.88)}
+.ez-play-btn.playing{background:rgba(212,168,75,0.2);border:2px solid var(--gold);animation:micPulse 1.5s ease-in-out infinite}
+.ez-audio-prog-wrap{height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden}
+.ez-audio-prog-fill{height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width 0.2s}
 </style>
 </head>
 <body>
@@ -1034,6 +1044,8 @@ body::before{
       <div class="ez-stat"><div class="ez-stat-v" id="ezStatA" style="color:var(--green)">0</div><div class="ez-stat-l">Ayet</div></div>
       <div class="ez-stat"><div class="ez-stat-v" id="ezStatO" style="color:var(--blue)">0</div><div class="ez-stat-l">Oturum</div></div>
     </div>
+    <div class="sec-label">Hafız Seç</div>
+    <div class="ez-reciter-scroll" id="ezReciterPicker"></div>
     <div class="sec-label">Sureler</div>
     <div id="ezberList"></div>
   </div>
@@ -1048,8 +1060,19 @@ body::before{
       </div>
       <div style="font-family:'Amiri Quran',serif;font-size:20px;color:var(--gold)" id="ezSessAr"></div>
     </div>
-    <div class="prog-track" style="margin-bottom:14px">
+    <div class="prog-track" style="margin-bottom:10px">
       <div id="ezProgBar" class="prog-fill" style="width:0%;background:var(--gold)"></div>
+    </div>
+    <div class="ez-audio-bar">
+      <button class="ez-play-btn" id="ezPlayBtn" onclick="ezToggleAudio()">▶</button>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;font-weight:700;color:var(--text)" id="ezAudioName">Mişari Afasi</div>
+          <div style="font-size:10px;color:var(--text3)" id="ezAudioStatus">Ayeti dinle</div>
+        </div>
+        <div style="font-size:10px;color:var(--text2);font-family:'Amiri Quran',serif;margin-top:1px" id="ezAudioAr">مشاري العفاسي</div>
+        <div class="ez-audio-prog-wrap"><div class="ez-audio-prog-fill" id="ezAudioProg"></div></div>
+      </div>
     </div>
     <div class="ez-ayah-card" id="ezAyahCard">
       <div class="ez-aynum" id="ezAyNum">Ayet 1</div>
@@ -1731,6 +1754,83 @@ function notify(title,body){
 }
 
 /* ══ EZBER ══ */
+const RECITERS=[
+  {id:'Alafasy_128kbps',                name:'Mişari Afasi',          ar:'مشاري العفاسي',         flag:'🇰🇼'},
+  {id:'Abdurrahmaan_As-Sudais_192kbps', name:'Abdurrahman Sudais',    ar:'عبد الرحمن السديس',     flag:'🇸🇦'},
+  {id:'MaherAlMuaiqly128kbps',          name:'Maher El-Muaykli',      ar:'ماهر المعيقلي',          flag:'🇸🇦'},
+  {id:'Abdul_Basit_Murattal_192kbps',   name:'Abdulbasit (Murattal)', ar:'عبد الباسط عبد الصمد',  flag:'🇪🇬'},
+  {id:'Husary_128kbps',                 name:'Mahmud Husari',          ar:'محمود خليل الحصري',     flag:'🇪🇬'},
+  {id:'Minshawi_Murattal_128kbps',      name:'Minşawi',               ar:'محمد صديق المنشاوي',   flag:'🇪🇬'},
+];
+let EZ_RECITER=localStorage.getItem('ez_reciter')||RECITERS[0].id;
+let ezAudio=null;
+
+function renderReciterPicker(){
+  const picker=document.getElementById('ezReciterPicker');picker.innerHTML='';
+  RECITERS.forEach(r=>{
+    const el=document.createElement('div');
+    el.className='ez-reciter-chip'+(r.id===EZ_RECITER?' ez-rc-active':'');
+    el.innerHTML=`${r.flag} ${r.name}<br><span style="font-size:9px;opacity:0.75;font-family:'Amiri Quran',serif">${r.ar}</span>`;
+    el.onclick=()=>ezSelectReciter(r.id);
+    picker.appendChild(el);
+  });
+  const cur=RECITERS.find(r=>r.id===EZ_RECITER)||RECITERS[0];
+  const nameEl=document.getElementById('ezAudioName');
+  const arEl=document.getElementById('ezAudioAr');
+  if(nameEl)nameEl.textContent=`${cur.flag} ${cur.name}`;
+  if(arEl)arEl.textContent=cur.ar;
+}
+
+function ezSelectReciter(id){
+  EZ_RECITER=id;
+  localStorage.setItem('ez_reciter',id);
+  ezStopAudio();
+  renderReciterPicker();
+}
+
+function ezAudioUrl(surahNum,ayahIdx){
+  const s=String(surahNum).padStart(3,'0');
+  const a=String(ayahIdx+1).padStart(3,'0');
+  return`https://everyayah.com/data/${EZ_RECITER}/${s}${a}.mp3`;
+}
+
+function ezToggleAudio(){
+  if(ezAudio&&!ezAudio.paused){ezStopAudio();}
+  else{ezPlayAudio();}
+}
+
+function ezPlayAudio(){
+  if(!EZ.surah||!EZ.ayahs.length)return;
+  ezStopAudio();
+  const url=ezAudioUrl(EZ.surah.num,EZ.idx);
+  ezAudio=new Audio(url);
+  const btn=document.getElementById('ezPlayBtn');
+  const status=document.getElementById('ezAudioStatus');
+  const prog=document.getElementById('ezAudioProg');
+  btn.textContent='⏸';btn.classList.add('playing');
+  status.textContent='Yükleniyor…';
+  ezAudio.ontimeupdate=()=>{
+    if(ezAudio.duration>0){
+      prog.style.width=Math.round(ezAudio.currentTime/ezAudio.duration*100)+'%';
+      const rem=Math.ceil(ezAudio.duration-ezAudio.currentTime);
+      status.textContent='▶ '+rem+'s';
+    }
+  };
+  ezAudio.onended=()=>{btn.textContent='▶';btn.classList.remove('playing');status.textContent='Tamamlandı ✓';prog.style.width='100%';ezAudio=null;};
+  ezAudio.onerror=()=>{btn.textContent='▶';btn.classList.remove('playing');status.textContent='Ses yüklenemedi';ezAudio=null;};
+  ezAudio.play().catch(()=>{btn.textContent='▶';btn.classList.remove('playing');status.textContent='Hata';ezAudio=null;});
+}
+
+function ezStopAudio(){
+  if(ezAudio){try{ezAudio.pause();ezAudio.src='';}catch{}ezAudio=null;}
+  const btn=document.getElementById('ezPlayBtn');
+  const status=document.getElementById('ezAudioStatus');
+  const prog=document.getElementById('ezAudioProg');
+  if(btn){btn.textContent='▶';btn.classList.remove('playing');}
+  if(status)status.textContent='Ayeti dinle';
+  if(prog)prog.style.width='0%';
+}
+
 const EZBER_SURAHS=[
   {num:1,  name:'El-Fatiha',     ar:'الفاتحة',    ayahs:7,  tr:'Açılış Suresi'},
   {num:78, name:'En-Nebe',       ar:'النبأ',       ayahs:40, tr:'Büyük Haber'},
@@ -1802,6 +1902,7 @@ function renderEzberList(){
   document.getElementById('ezStatS').textContent=totMem;
   document.getElementById('ezStatA').textContent=totAy;
   document.getElementById('ezStatO').textContent=ES.sess();
+  renderReciterPicker();
 }
 
 async function ezberOpen(surah){
@@ -1853,14 +1954,15 @@ function ezUpdateSessUI(){
 
 function ezNext(){
   if(!EZ.ayahs.length)return;
+  ezStopAudio();
   if(EZ.idx<EZ.ayahs.length-1){EZ.idx++;EZ.hidden=false;ezHideReset();ezUpdateAyah();}
   else{showToast('Sure Bitti',EZ.surah.name+' tamamlandı!','🎉');ES.addSess();}
 }
 function ezPrev(){
-  if(EZ.ayahs.length&&EZ.idx>0){EZ.idx--;EZ.hidden=false;ezHideReset();ezUpdateAyah();}
+  if(EZ.ayahs.length&&EZ.idx>0){ezStopAudio();EZ.idx--;EZ.hidden=false;ezHideReset();ezUpdateAyah();}
 }
 function ezBack(){
-  ezStopMic();
+  ezStopMic();ezStopAudio();
   document.getElementById('ezSessV').style.display='none';
   document.getElementById('ezListV').style.display='block';
   renderEzberList();
