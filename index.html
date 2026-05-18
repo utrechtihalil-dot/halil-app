@@ -737,6 +737,12 @@ body::before{
 .ez-spin{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;color:var(--text3);font-size:13px;position:absolute;inset:0;background:var(--card);border-radius:var(--r)}
 .ez-spin::before{content:'';width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+.ez-meal-hint{font-size:10px;color:rgba(212,168,75,0.45);text-align:center;margin-top:10px;letter-spacing:0.5px;font-weight:500}
+.ez-meal-panel{background:var(--card2);border:1px solid rgba(212,168,75,0.2);border-radius:var(--r);padding:16px;margin-bottom:10px;display:none;animation:mealSlide 0.25s ease}
+.ez-meal-panel.open{display:block}
+@keyframes mealSlide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.ez-meal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.ez-meal-text{font-size:14px;line-height:1.85;color:var(--text);font-style:italic}
 .ez-reciter-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
 .ez-reciter-scroll::-webkit-scrollbar{display:none}
 .ez-reciter-chip{flex-shrink:0;padding:8px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'DM Sans',sans-serif;text-align:center;line-height:1.4}
@@ -1075,10 +1081,19 @@ body::before{
         <div class="ez-audio-prog-wrap"><div class="ez-audio-prog-fill" id="ezAudioProg"></div></div>
       </div>
     </div>
-    <div class="ez-ayah-card" id="ezAyahCard">
-      <div class="ez-aynum" id="ezAyNum">Ayet 1</div>
+    <div class="ez-ayah-card" id="ezAyahCard" onclick="ezToggleMeal()">
+      <div class="ez-aynum" id="ezAyNum">— ١ —</div>
       <div class="ez-arabic" id="ezAyahTxt">يُحمَّل...</div>
       <div id="ezLoader" class="ez-spin" style="display:none">Yükleniyor…</div>
+      <div class="ez-meal-hint" id="ezMealHint">👆 Meal için dokun</div>
+    </div>
+    <!-- Meal paneli -->
+    <div class="ez-meal-panel" id="ezMealPanel">
+      <div class="ez-meal-header">
+        <span style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase">Elmalılı Hamdi Yazır Meali</span>
+        <span onclick="ezCloseMeal(event)" style="font-size:16px;color:var(--text3);cursor:pointer;padding:4px">✕</span>
+      </div>
+      <div class="ez-meal-text" id="ezMealText">Yükleniyor…</div>
     </div>
     <div class="ez-ctrl-row">
       <button class="ez-ctrl" id="ezHideBtn" onclick="ezToggleHide()">
@@ -1880,7 +1895,7 @@ const ES={
   addSess:()=>localStorage.setItem('ez_sess',String(ES.sess()+1)),
 };
 
-let EZ={surah:null,idx:0,ayahs:[],hidden:false,rec:null,busy:false};
+let EZ={surah:null,idx:0,ayahs:[],meals:[],hidden:false,mealOpen:false,rec:null,busy:false};
 
 function renderEzberList(){
   const prog=ES.prog();
@@ -1921,9 +1936,13 @@ async function ezFetch(num){
   document.getElementById('ezLoader').style.display='flex';
   document.getElementById('ezAyahTxt').style.opacity='0.2';
   try{
-    const r=await fetch('https://api.alquran.cloud/v1/surah/'+num+'/quran-uthmani');
+    const r=await fetch('https://api.alquran.cloud/v1/surah/'+num+'/editions/quran-uthmani,tr.yazir');
     const d=await r.json();
-    if(d.code===200){EZ.ayahs=d.data.ayahs.map(a=>a.text);ezUpdateAyah();}
+    if(d.code===200){
+      EZ.ayahs=d.data[0].ayahs.map(a=>a.text);
+      EZ.meals=d.data[1].ayahs.map(a=>a.text);
+      ezUpdateAyah();
+    }
     else showToast('Hata','Sure yüklenemedi','⚠️');
   }catch{showToast('Bağlantı Hatası','İnternet bağlantısı gerekiyor','📡');}
   finally{EZ.busy=false;document.getElementById('ezLoader').style.display='none';document.getElementById('ezAyahTxt').style.opacity='1';}
@@ -1943,6 +1962,10 @@ function ezUpdateAyah(){
   mb.style.background=mem?'rgba(58,170,104,0.25)':'rgba(58,170,104,0.1)';
   mb.textContent=mem?'✓ Ezberlendi (İşaretli)':'✓ Bu Ayeti Ezberlediğim Olarak İşaretle';
   document.getElementById('ezFeedback').style.display='none';
+  EZ.mealOpen=false;
+  document.getElementById('ezMealPanel').classList.remove('open');
+  document.getElementById('ezMealHint').textContent='👆 Meal için dokun';
+  document.getElementById('ezMealHint').style.color='';
   ezUpdateSessUI();
 }
 
@@ -1970,6 +1993,24 @@ function ezBack(){
   document.getElementById('ezListV').style.display='block';
   renderEzberList();
 }
+
+function ezToggleMeal(){
+  if(!EZ.meals.length)return;
+  EZ.mealOpen=!EZ.mealOpen;
+  const panel=document.getElementById('ezMealPanel');
+  const hint=document.getElementById('ezMealHint');
+  if(EZ.mealOpen){
+    document.getElementById('ezMealText').textContent=EZ.meals[EZ.idx]||'—';
+    panel.classList.add('open');
+    hint.textContent='👆 Meali kapat';
+    hint.style.color='rgba(212,168,75,0.7)';
+  }else{
+    panel.classList.remove('open');
+    hint.textContent='👆 Meal için dokun';
+    hint.style.color='';
+  }
+}
+function ezCloseMeal(e){e.stopPropagation();EZ.mealOpen=true;ezToggleMeal();}
 
 function ezToggleHide(){
   EZ.hidden=!EZ.hidden;
